@@ -1,0 +1,134 @@
+/* src/styles/global.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos base */
+html {
+  @apply bg-gray-100 text-gray-900;
+}
+
+html.dark {
+  @apply bg-gray-900 text-gray-100;
+}
+
+/* Ajustes para componentes específicos */
+h1, h2, h3, h4, h5, h6 {
+  @apply text-gray-900;
+}
+
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark h4,
+html.dark h5,
+html.dark h6 {
+  @apply text-white;
+}
+
+p, span, a, input, textarea, button {
+  @apply text-gray-700;
+}
+
+html.dark p,
+html.dark span,
+html.dark a,
+html.dark input,
+html.dark textarea,
+html.dark button {
+  @apply text-gray-200;
+}
+
+input, textarea {
+  @apply bg-gray-50 border-gray-300;
+}
+
+html.dark input,
+html.dark textarea {
+  @apply bg-gray-800 border-gray-600;
+}
+
+button {
+  @apply transition-colors;
+}
+
+/* Ajustes para componentes específicos */
+.bg-white {
+  @apply bg-white;
+}
+
+html.dark .bg-white {
+  @apply bg-gray-800;
+}
+
+.border-gray-200 {
+  @apply border-gray-200;
+}
+
+html.dark .border-gray-200 {
+  @apply border-gray-700;
+}
+
+.text-gray-500 {
+  @apply text-gray-500;
+}
+
+html.dark .text-gray-500 {
+  @apply text-gray-400;
+}
+
+.text-gray-700 {
+  @apply text-gray-700;
+}
+
+html.dark .text-gray-700 {
+  @apply text-gray-200;
+}
+
+.text-blue-800 {
+  @apply text-blue-800;
+}
+
+html.dark .text-blue-800 {
+  @apply text-blue-300;
+}
+
+.bg-blue-600 {
+  @apply bg-blue-600;
+}
+
+html.dark .bg-blue-600 {
+  @apply bg-blue-700;
+}
+
+.bg-blue-100 {
+  @apply bg-blue-100;
+}
+
+html.dark .bg-blue-100 {
+  @apply bg-blue-900;
+}
+
+.text-blue-800 {
+  @apply text-blue-800;
+}
+
+html.dark .text-blue-800 {
+  @apply text-blue-300;
+}
+
+.bg-gray-200 {
+  @apply bg-gray-200;
+}
+
+html.dark .bg-gray-200 {
+  @apply bg-gray-700;
+}
+
+.text-gray-800 {
+  @apply text-gray-800;
+}
+
+html.dark .text-gray-800 {
+  @apply text-gray-200;
+}

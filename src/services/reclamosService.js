@@ -1,0 +1,44 @@
+// services/reclamosService.js
+import api from './http';
+
+export async function obtenerReclamos(dni) {
+  try {
+    const response = await api.get(`/api/reclamos/${dni}`);
+    // Asegurarse de que response.data sea un objeto y tenga la propiedad reclamos
+    return response.data && typeof response.data === 'object' ? response.data : { reclamos: [] };
+  } catch (error) {
+    console.error('Error al obtener reclamos:', error);
+    return { reclamos: [] };
+  }
+}
+
+export async function obtenerTodosLosReclamos() {
+  try {
+    const response = await api.get('/api/reclamos/');
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener todos los reclamos:', error);
+    return [];
+  }
+}
+
+export async function crearReclamo(dni, descripcion) {
+  try {
+    const response = await api.post(`/api/reclamos/${dni}`, {
+      descripcion,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function actualizarEstadoReclamo(idReclamo, nuevoEstado) {
+  try {
+    const response = await api.put(`/api/reclamos/${idReclamo}`, { estado: nuevoEstado });
+    return response.data;
+  } catch (error) {
+    console.error('Error al actualizar estado del reclamo:', error);
+    throw error;
+  }
+}

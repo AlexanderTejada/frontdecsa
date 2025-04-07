@@ -6,6 +6,7 @@ import { ClipboardList, CreditCard, User } from 'lucide-vue-next'
 const router = useRouter()
 const tipoUsuario = computed(() => localStorage.getItem('tipoUsuario') || 'cliente')
 const mostrarConfirmacion = ref(false)
+const mostrarNavMobile = ref(false)
 
 const confirmarLogout = () => {
   localStorage.removeItem('dni')
@@ -16,44 +17,62 @@ const confirmarLogout = () => {
 </script>
 
 <template>
-  <!-- NAV -->
-  <nav class="mobile-nav">
-    <template v-if="tipoUsuario === 'cliente'">
-      <router-link to="/reclamos" class="nav-item" active-class="active">
-        <ClipboardList class="icon" />
-        <small>Reclamos</small>
-      </router-link>
-      <router-link to="/facturas" class="nav-item" active-class="active">
-        <CreditCard class="icon" />
-        <small>Facturas</small>
-      </router-link>
-      <router-link to="/perfil" class="nav-item" active-class="active">
-        <User class="icon" />
-        <small>Perfil</small>
-      </router-link>
-    </template>
+  <!-- BOTÓN FLOTANTE PARA MOSTRAR / OCULTAR NAV -->
+  <button
+    @click="mostrarNavMobile = !mostrarNavMobile"
+    class="fixed bottom-20 right-4 z-50 bg-blue-600 text-white p-3 rounded-full shadow-lg md:hidden transition hover:bg-blue-700"
+  >
+    <svg v-if="!mostrarNavMobile" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round"
+            d="M4 6h16M4 12h16M4 18h16"/>
+    </svg>
+    <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+    </svg>
+  </button>
 
-    <template v-else-if="tipoUsuario === 'empleado'">
-      <router-link to="/reclamos-empleados" class="nav-item" active-class="active">
-        <ClipboardList class="icon" />
-        <small>Reclamos</small>
-      </router-link>
-      <router-link to="/chatbot" class="nav-item" active-class="active">
-        <User class="icon" />
-        <small>Chatbot</small>
-      </router-link>
-    </template>
+  <!-- NAV BOTTOM TOGGLEABLE -->
+  <transition name="slide-up">
+    <nav v-if="mostrarNavMobile" class="mobile-nav">
+      <template v-if="tipoUsuario === 'cliente'">
+        <router-link to="/reclamos" class="nav-item" active-class="active">
+          <ClipboardList class="icon" />
+          <small>Reclamos</small>
+        </router-link>
+        <router-link to="/facturas" class="nav-item" active-class="active">
+          <CreditCard class="icon" />
+          <small>Facturas</small>
+        </router-link>
+        <router-link to="/perfil" class="nav-item" active-class="active">
+          <User class="icon" />
+          <small>Perfil</small>
+        </router-link>
+      </template>
 
-    <button @click="mostrarConfirmacion = true" class="nav-item text-red-400 hover:text-red-300 transition">
-      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1" />
-      </svg>
-      <small>Salir</small>
-    </button>
-  </nav>
+      <template v-else-if="tipoUsuario === 'empleado'">
+        <router-link to="/reclamos-empleados" class="nav-item" active-class="active">
+          <ClipboardList class="icon" />
+          <small>Reclamos</small>
+        </router-link>
+        <router-link to="/chatbot" class="nav-item" active-class="active">
+          <User class="icon" />
+          <small>Chatbot</small>
+        </router-link>
+      </template>
 
-  <!-- MODAL -->
+      <button @click="mostrarConfirmacion = true" class="nav-item text-red-400 hover:text-red-300 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1" />
+        </svg>
+        <small>Salir</small>
+      </button>
+    </nav>
+  </transition>
+
+  <!-- MODAL DE CONFIRMACIÓN -->
   <transition name="fade">
     <div v-if="mostrarConfirmacion" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center">
       <div class="bg-white rounded-xl shadow-xl p-6 max-w-sm w-full mx-4 text-center">
@@ -78,6 +97,7 @@ const confirmarLogout = () => {
 .mobile-nav {
   display: none;
 }
+
 @media (max-width: 768px) {
   .mobile-nav {
     display: flex;
@@ -118,10 +138,23 @@ const confirmarLogout = () => {
   }
 }
 
-.fade-enter-active, .fade-leave-active {
+/* Transiciones */
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.slide-up-enter-from,
+.slide-up-leave-to {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.3s ease;
 }
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 </style>

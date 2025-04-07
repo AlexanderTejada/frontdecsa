@@ -10,37 +10,40 @@
                ml-0 md:ml-[200px] lg:ml-[240px] xl:ml-[280px]
                w-full md:w-[calc(100%-200px)] lg:w-[calc(100%-240px)] xl:w-[calc(100%-280px)]"
       >
-        <header class="bg-white px-6 py-5 border-b border-slate-200 flex items-center justify-between energy-header">
-          <!-- Identidad institucional -->
-          <div class="flex items-center">
-            <div class="energy-icon mr-3"></div>
-            <div>
-              <h1 class="text-lg font-semibold text-slate-800 leading-tight animate-glow-text">
-                Distribuidora Eléctrica de Caucete S.A.
-              </h1>
-              <p class="text-xs text-slate-500">
-                Compañía de servicios públicos — San Juan, Argentina
-              </p>
-            </div>
-          </div>
-          <div class="text-right leading-tight">
-            <router-link
-              v-if="tipoUsuario === 'cliente'"
-              to="/perfil"
-              class="text-sm sm:text-base font-medium text-indigo-700 hover:underline hover:text-indigo-900 transition-colors"
-            >
-              {{ nombreUsuario }}
-            </router-link>
-            <span
-              v-else
-              class="text-sm sm:text-base font-medium text-indigo-700"
-            >
-              {{ nombreUsuario }}
-            </span>
-          </div>
-          <!-- Saludo al usuario -->
-         
-        </header>
+      <header
+  class="bg-white px-4 py-2 sm:px-6 sm:py-5 border-b border-slate-200 flex items-center justify-between sticky top-0 z-50 energy-header"
+>
+  <!-- Identidad institucional -->
+  <div class="flex items-center space-x-3 overflow-hidden">
+    <div class="energy-icon shrink-0"></div>
+    <div class="leading-tight">
+      <h1 class="text-sm sm:text-lg font-semibold text-slate-800 animate-glow-text truncate">
+        Distribuidora Eléctrica de Caucete S.A.
+      </h1>
+      <p class="hidden sm:block text-xs text-slate-500 truncate">
+        Compañía de servicios públicos — San Juan, Argentina
+      </p>
+    </div>
+  </div>
+
+  <!-- Nombre de usuario -->
+  <div class="text-right leading-tight">
+    <router-link
+      v-if="tipoUsuario === 'cliente'"
+      to="/perfil"
+      class="text-sm sm:text-base font-medium text-indigo-700 hover:underline hover:text-indigo-900 transition-colors"
+    >
+      {{ nombreUsuario }}
+    </router-link>
+    <span
+      v-else
+      class="text-sm sm:text-base font-medium text-indigo-700"
+    >
+      {{ nombreUsuario }}
+    </span>
+  </div>
+</header>
+
 
         <router-view />
       </div>

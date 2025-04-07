@@ -47,7 +47,7 @@
               v-model="suministro"
               id="suministro"
               type="password"
-              placeholder="N° de Suministro"
+              placeholder="N° de cuenta"
               autocomplete="current-password"
               required
             />

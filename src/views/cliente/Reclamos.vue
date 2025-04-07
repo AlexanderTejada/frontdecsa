@@ -4,22 +4,30 @@
       <h2 class="text-2xl font-semibold text-slate-800">Mis Reclamos</h2>
       <button
         @click="abrirModalCrear"
-        class="bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold text-base sm:text-sm px-5 py-2 sm:px-4 sm:py-2 rounded-lg shadow-md hover:from-blue-700 hover:to-blue-600 transition-all duration-300"
+        class="relative text-white font-semibold text-base sm:text-sm px-5 py-2 sm:px-4 sm:py-2 rounded-lg shadow-md bg-gradient-to-r from-indigo-600 via-blue-500 to-sky-200 hover:from-indigo-700 hover:to-sky-500 transition-all duration-300 overflow-hidden"
       >
-        + Hacer Reclamo
+        <span class="relative z-10">+ Hacer Reclamo</span>
+        <span class="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity duration-500"></span>
       </button>
     </div>
 
-    <div class="overflow-y-auto max-h-[70vh] pr-2">
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-    <ReclamoCard
-      v-for="reclamo in reclamos"
-      :key="reclamo.ID_RECLAMO"
-      :reclamo="reclamo"
-      @click="abrirDetalle(reclamo)"
-    />
-  </div>
-</div>
+    <div class="relative">
+      <div
+        class="overflow-y-auto max-h-[60vh] pr-2 border border-slate-300 rounded-xl shadow-md bg-slate-100/70 backdrop-blur-md p-4 transition-all duration-300"
+      >
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+          <ReclamoCard
+            v-for="reclamo in reclamos"
+            :key="reclamo.ID_RECLAMO"
+            :reclamo="reclamo"
+            @click="abrirDetalle(reclamo)"
+          />
+        </div>
+      </div>
+
+      <!-- Sombra inferior para suavizar el corte del scroll -->
+      <div class="pointer-events-none absolute bottom-0 left-0 right-0 h-16 rounded-b-xl bg-gradient-to-t from-slate-100/80 via-slate-100/60 to-transparent"></div>
+    </div>
 
     <CrearReclamoModal
       v-if="mostrarModalCrear"
@@ -34,6 +42,8 @@
     />
   </div>
 </template>
+
+
 
 <script setup>
 import { ref, onMounted } from 'vue';

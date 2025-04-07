@@ -234,6 +234,7 @@ const login = async () => {
   cursor: pointer;
   font-weight: 600;
   transition: all 0.3s ease;
+  color:#1e3a8a;
 }
 
 .tipo-usuario button.active {
@@ -283,6 +284,7 @@ button {
 
 button:hover {
   background: linear-gradient(to right, #5a0eb7, #1e60d6);
+  color: white;
 }
 
 .error {
@@ -290,5 +292,84 @@ button:hover {
   color: #dc2626;
   text-align: center;
   font-size: 0.9em;
+}@media (max-width: 640px) {
+  /* Contenedor general */
+  .login-box {
+    flex-direction: column;
+    border-radius: 1.2rem;
+    padding: 0;
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
+  }
+
+  /* Lado izquierdo: bienvenida */
+  .login-left {
+    padding: 1.5rem;
+    align-items: center;
+    text-align: center;
+  }
+
+  .login-left h1 {
+    font-size: 1.5em;
+    text-align: center;
+  }
+
+  .login-left p {
+    font-size: 1.1em;
+    line-height: 1.5;
+    max-width: 100%;
+    padding: 0 1rem;
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  /* Lado derecho: formulario */
+  .login-right {
+    padding: 1.5rem;
+  }
+
+  .login-right h2 {
+    font-size: 1.3em;
+    margin-bottom: 1.2rem;
+  }
+
+  /* Selector de tipo de usuario */
+  .tipo-usuario {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .tipo-usuario button {
+    width: 100%;
+    font-size: 0.95em;
+    padding: 0.6rem 1rem;
+    background: #f3f4f6;
+    color: #4b5563;
+  }
+
+  .tipo-usuario button.active {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+  }
+
+  /* Inputs */
+  .input-group input {
+    font-size: 1.05em;
+    padding: 0.9em 1em;
+  }
+
+  /* Botón de ingreso */
+  button[type="submit"] {
+    padding: 1.2rem;
+    font-size: 1.1em;
+    border-radius: 1em;
+  }
+
+  /* Error */
+  .error {
+    font-size: 1em;
+  }
 }
+
 </style>

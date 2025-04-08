@@ -1,46 +1,43 @@
 <template>
-  <div class="h-full w-full px-4 sm:px-6 lg:px-20 py-5 ">
-    <div class="flex flex-col h-full rounded-xl overflow-hidden bg-white border border-gray-200">   
-
-      <!-- Mensajes -->
+  <div class="flex flex-col h-215 w-full bg-gradient-to-br from-slate-100 to-white">
+    <!-- Área de mensajes -->
+    <div
+      ref="messagesContainer"
+      class="flex-1 overflow-y-auto px-6 py-6 space-y-4 bg-white"
+    >
       <div
-        ref="messagesContainer"
-        class="flex-1 overflow-y-auto px-6 py-4 space-y-4 bg-gray-50"
+        v-for="(message, index) in messages"
+        :key="index"
+        :class="[
+          'max-w-xl px-5 py-3 rounded-xl text-sm shadow-md whitespace-pre-wrap break-words',
+          message.sender === 'user'
+            ? 'bg-blue-600 text-white self-end ml-auto'
+            : 'bg-slate-200 text-slate-800 self-start'
+        ]"
       >
-        <div
-          v-for="(message, index) in messages"
-          :key="index"
-          :class="[
-            'max-w-xl px-4 py-2 rounded-lg whitespace-pre-wrap',
-            message.sender === 'user'
-              ? 'bg-blue-500 text-white self-end ml-auto'
-              : 'bg-gray-200 text-gray-800 self-start'
-          ]"
-        >
-          <span v-if="message.isTyping" class="inline-block animate-pulse">...</span>
-          <span v-else v-html="message.text" />
-        </div>
+        <span v-if="message.isTyping" class="inline-block animate-pulse">...</span>
+        <span v-else v-html="message.text" />
       </div>
+    </div>
 
-      <!-- Input -->
-      <div class="px-6 py-4 bg-white border border-gray-300 flex gap-2">
-        <textarea
-          v-model="inputMessage"
-          @keyup.enter.exact.prevent="sendMessage"
-          placeholder="Escribe tu consulta..."
-          class="flex-1 p-2 rounded-md border border-gray-300  resize-none text-sm focus:outline-none focus:ring focus:ring-blue-200"
-          rows="2"
-          ref="textarea"
-          :disabled="isLoading"
-        />
-        <button
-          @click="sendMessage"
-          :disabled="isLoading"
-          class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-md transition"
-        >
-        <h2 style="cursor: pointer;"><strong>Enviar</strong></h2>
-        </button>
-      </div>
+    <!-- Input -->
+    <div class="px-6 py-4 bg-white border-t border-slate-300 flex items-center gap-3">
+      <textarea
+        v-model="inputMessage"
+        @keyup.enter.exact.prevent="sendMessage"
+        placeholder="Escribe tu consulta..."
+        class="flex-1 resize-none px-4 py-2 text-sm text-slate-800 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+        rows="2"
+        ref="textarea"
+        :disabled="isLoading"
+      />
+      <button
+        @click="sendMessage"
+        :disabled="isLoading"
+        class="px-5 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow transition"
+      >
+        Enviar
+      </button>
     </div>
   </div>
 </template>

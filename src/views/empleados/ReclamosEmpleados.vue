@@ -1,11 +1,39 @@
 <template>
-  <div class="px-4 md:px-8 py-10 max-w-screen-2xl mx-auto">
-    <!-- Título -->
-    <h2 class="text-2xl font-semibold text-slate-800 text-center mb-8">
-      Reclamos de Todos los Clientes
-    </h2>
+  <div class="px-6 py-12 sm:px-4 sm:py-8 md:px-6 lg:px-12 xl:px-10 max-w-8xl mx-auto w-full">
+    <!-- Encabezado -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+      <h2 class="text-2xl font-semibold text-slate-800">Reclamos de Todos los Clientes</h2>
+      <button
+        @click="irAlMesActual"
+        class="cursor-pointer relative text-white font-semibold text-base sm:text-sm px-5 py-2 sm:px-4 sm:py-3 rounded-lg shadow-md bg-gradient-to-r from-indigo-600 via-blue-500 to-sky-200 hover:from-indigo-700 hover:to-sky-500 transition-all duration-300 overflow-hidden"
+      >
+        <span class="relative z-10">Mes actual</span>
+        <span class="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity duration-500"></span>
+      </button>
+    </div>
 
-    <!-- Filtros centrados -->
+    <!-- Navegación por mes y año -->
+    <div class="flex items-center justify-center mb-6 gap-4 flex-wrap">
+      <button
+        @click="mesAnterior"
+        class="cursor-pointer px-4 py-2 rounded-full bg-slate-200 hover:bg-slate-300 hover:shadow-md transition hover:scale-105 text-slate-700"
+        aria-label="Mes anterior"
+      >
+        ‹
+      </button>
+
+      <span class="text-lg font-medium text-slate-800">{{ meses[mesActual] }} {{ anioActual }}</span>
+
+      <button
+        @click="mesSiguiente"
+class="cursor-pointer px-4 py-2 rounded-full bg-slate-200 hover:bg-slate-300 hover:shadow-md transition hover:scale-105 text-slate-700"
+        aria-label="Mes siguiente"
+      >
+        ›
+      </button>
+    </div>
+
+    <!-- Filtros -->
     <div class="flex flex-col sm:flex-row sm:justify-center sm:items-center gap-4 mb-6 text-center">
       <input
         v-model="busqueda"
@@ -15,7 +43,7 @@
       />
       <select
         v-model="filtroEstado"
-        class="w-full sm:w-[120px] px-4 py-2 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400  bg-blue-90"
+        class="w-full sm:w-[120px] px-4 py-2 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
       >
         <option value="Todos">Todos</option>
         <option value="Pendiente">Pendiente</option>
@@ -24,53 +52,30 @@
       </select>
     </div>
 
-    <!-- Navegación por mes y año -->
-    <div class="flex justify-center items-center gap-4 flex-wrap mb-8">
-      <button
-        @click="mesAnterior"
-        class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-100 text-blue-700 transition hover:bg-blue-200 boton-mes"
-        aria-label="Mes anterior"
-      >
-        ‹
-      </button>
-
-      <span class="text-lg font-medium text-slate-800 whitespace-nowrap ">
-        {{ meses[mesActual] }} {{ anioActual }}
-      </span>
-
-      <button
-        @click="mesSiguiente"
-        class="w-10 h-10 flex items-center justify-center rounded-full bg-blue-100 text-blue-700 transition hover:bg-blue-200 boton-mes"
-        aria-label="Mes siguiente"
-      >
-        ›
-      </button>
-
-      <button
-        @click="irAlMesActual"
-        class="px-4 py-1 rounded-md text-sm font-medium bg-slate-100 text-slate-700 shadow-sm transition hover:bg-slate-200"
-      >
-        Mes actual
-      </button>
-    </div>
-
     <!-- Resultados -->
-    <div
-      class="overflow-y-auto max-h-[50vh] p-2 pr-4 w-full transition-all  rounded-xl overflow-hidden bg-white border border-gray-200"
-      :class="{ 'flex items-center justify-center min-h-[300px]': reclamosFiltrados.length === 0 }"
-    >
-      <div v-if="reclamosFiltrados.length === 0" class="text-center text-slate-500 text-lg">
+    <div class="relative">
+      <div
+        v-if="reclamosFiltrados.length === 0"
+        class="text-center text-slate-500 text-lg sm:text-base py-8"
+      >
         No hay reclamos disponibles para mostrar.
       </div>
 
-      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-        <ReclamoCardEmpleados
-          v-for="reclamo in reclamosFiltrados"
-          :key="reclamo.ID_RECLAMO"
-          v-bind="reclamo"
-          @verDetalles="abrirModal(reclamo)"
-        />
+      <div
+        v-else
+        class="overflow-y-auto max-h-[60vh] pr-2 border border-slate-300 rounded-xl shadow-md bg-slate-100/70 backdrop-blur-md p-4 transition-all duration-300"
+      >
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+          <ReclamoCardEmpleados
+            v-for="reclamo in reclamosFiltrados"
+            :key="reclamo.ID_RECLAMO"
+            v-bind="reclamo"
+            @verDetalles="abrirModal(reclamo)"
+          />
+        </div>
       </div>
+
+      <div class="pointer-events-none absolute bottom-0 left-0 right-0 h-16 rounded-b-xl bg-gradient-to-t from-slate-100/80 via-slate-100/60 to-transparent"></div>
     </div>
 
     <!-- Modal -->
@@ -84,9 +89,6 @@
       @cerrar="cerrarModal"
       @update:nuevoEstado="nuevoEstado = $event"
     />
-
-    <!-- Chat flotante -->
-    <ChatBubble />
   </div>
 </template>
 
@@ -95,7 +97,6 @@ import { ref, computed, onMounted } from 'vue';
 import { obtenerTodosLosReclamos, actualizarEstadoReclamo } from '@/services/api';
 import ReclamoCardEmpleados from '@/components/empleados/ReclamoCardEmpleados.vue';
 import ModalEstadoReclamo from '@/components/empleados/modal/ModalEstadoReclamo.vue';
-import ChatBubble from '@/components/empleados/ChatBubble.vue';
 
 const reclamos = ref([]);
 const busqueda = ref('');
@@ -243,39 +244,3 @@ const actualizarEstado = async () => {
 
 onMounted(obtenerReclamos);
 </script>
-
-<style scoped>
-.boton-mes {
-  /* --- Estilos Base --- */
-  font-size: 1.25rem;        /* Tamaño de fuente (mantenido) */
-  background-color: #007bfff3; /* Un azul más estándar y agradable que 'aqua' */
-  color: white;              /* Texto blanco para buen contraste */
-  padding: 1.5rem 1.5rem;    /* Espaciado interno (arriba/abajo, izquierda/derecha) */
-  border: none;              /* Quita el borde por defecto del navegador */
-  border-radius: 100px;        /* Esquinas redondeadas */
-  cursor: pointer;           /* Cambia el cursor a una mano para indicar que es clickeable */
-  text-align: center;        /* Centra el texto */
-  font-weight: bold;         /* Texto en negrita */
-  transition: background-color 0.2s ease-in-out, transform 0.1s ease; /* Transición suave para efectos */
-
-  /* --- Estilos de Interacción --- */
-
-  /* Al pasar el mouse por encima (hover) */
-  &:hover {
-    background-color: #0056b3; /* Un azul un poco más oscuro */
-  }
-
-  /* Al hacer click (active) */
-  &:active {
-    background-color: #004085; /* Un azul aún más oscuro */
-    transform: scale(0.98);   /* Efecto sutil de "presionado" */
-  }
-
-  /* Para accesibilidad (cuando el botón tiene foco, ej: navegando con Tab) */
-  /* :focus-visible es más moderno y preferible a :focus */
-  &:focus-visible {
-    outline: 2px solid #0056b3; /* Un borde visible alrededor */
-    outline-offset: 2px;      /* Separación entre el borde y el botón */
-  }
-}
-</style>

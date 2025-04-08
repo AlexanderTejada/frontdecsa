@@ -30,11 +30,10 @@
             <div class="energy-icon shrink-0"></div>
             <div class="leading-tight">
               <h1 class="text-sm sm:text-lg font-semibold text-slate-800 animate-glow-text truncate">
-Distribuidora Eléctrica de Caucete S.A.              </h1>
+                Distribuidora Eléctrica de Caucete S.A.
+              </h1>
               <p class="hidden sm:block text-xs text-slate-500 truncate">
                 Compañía de servicios públicos de electricidad en Caucete
-
-
               </p>
             </div>
           </div>
@@ -65,6 +64,11 @@ Distribuidora Eléctrica de Caucete S.A.              </h1>
       <MobileNav v-if="mostrarSidebarMobile" @cerrar="mostrarSidebarMobile = false" />
       <Spinner v-if="loading" />
     </div>
+
+    <!-- Footer fijo -->
+    <footer class="fixed bottom-0 left-0 w-full text-[10px] text-slate-400 text-center py-1 border-t border-slate-100 bg-white bg-opacity-80 backdrop-blur-sm z-50">
+      Desarrolladora Excelendia digital software
+    </footer>
   </div>
 </template>
 
@@ -146,14 +150,6 @@ router.afterEach(() => {
   animation: energyFlowHeader 4s infinite ease-in-out;
 }
 
-.energy-icon {
-  width: 32px;
-  height: 32px;
-  background: url('https://icon-library.com/images/electricity-icon/electricity-icon-15.jpg') no-repeat center;
-  background-size: contain;
-  animation: subtlePulse 5s infinite;
-}
-
 .animate-glow-text {
   animation: textGlow 3s infinite ease-in-out;
 }
@@ -162,11 +158,6 @@ router.afterEach(() => {
   0% { left: -100%; }
   50% { left: 50%; }
   100% { left: 150%; }
-}
-
-@keyframes subtlePulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
 }
 
 @keyframes textGlow {

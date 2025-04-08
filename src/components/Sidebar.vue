@@ -57,7 +57,7 @@
     <transition name="fade-scale">
       <div
         v-if="mostrarConfirmacion"
-        class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center"
+        class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center"
       >
         <div
           class="bg-white rounded-xl shadow-xl p-6 max-w-sm w-full mx-4 text-center transform transition-transform duration-300"

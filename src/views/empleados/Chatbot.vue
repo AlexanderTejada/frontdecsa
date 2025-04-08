@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col h-215 w-full bg-gradient-to-br from-slate-100 to-white">
-    <!-- Área de mensajes -->
+<div class="flex flex-col h-[85vh] w-full bg-gradient-to-br from-slate-100 to-white">
+  <!-- Área de mensajes -->
     <div
       ref="messagesContainer"
       class="flex-1 overflow-y-auto px-6 py-6 space-y-4 bg-white"
@@ -9,7 +9,7 @@
         v-for="(message, index) in messages"
         :key="index"
         :class="[
-          'max-w-xl px-5 py-3 rounded-xl text-sm shadow-md whitespace-pre-wrap break-words',
+          'max-w-xl px-5 py-3 rounded-xl  text-sm shadow-md whitespace-pre-wrap break-words',
           message.sender === 'user'
             ? 'bg-blue-600 text-white self-end ml-auto'
             : 'bg-slate-200 text-slate-800 self-start'

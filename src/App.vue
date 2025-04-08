@@ -11,7 +11,7 @@
                w-full md:w-[calc(100%-200px)] lg:w-[calc(100%-240px)] xl:w-[calc(100%-280px)]"
       >
         <header
-          class="bg-white px-4 py-2 sm:px-6 sm:py-5 border-b border-slate-200 flex items-center justify-between sticky top-0 z-50 energy-header"
+          class="bg-white px-4 py-2 sm:px-6 sm:py-5 border-b border-slate-200 flex items-center justify-between sticky top-0 energy-header shadow-sm"
         >
           <!-- BOTÓN MENÚ MOBILE -->
           <button
@@ -30,10 +30,11 @@
             <div class="energy-icon shrink-0"></div>
             <div class="leading-tight">
               <h1 class="text-sm sm:text-lg font-semibold text-slate-800 animate-glow-text truncate">
-                Distribuidora Eléctrica de Caucete S.A.
-              </h1>
+Distribuidora Eléctrica de Caucete S.A.              </h1>
               <p class="hidden sm:block text-xs text-slate-500 truncate">
-                Compañía de servicios públicos — San Juan, Argentina
+                Compañía de servicios públicos de electricidad en Caucete
+
+
               </p>
             </div>
           </div>
@@ -56,7 +57,9 @@
           </div>
         </header>
 
-        <router-view />
+        <transition name="fade" mode="out-in">
+          <router-view />
+        </transition>
       </div>
 
       <MobileNav v-if="mostrarSidebarMobile" @cerrar="mostrarSidebarMobile = false" />
@@ -129,7 +132,9 @@ router.afterEach(() => {
 .energy-header {
   position: relative;
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
+
 .energy-header::before {
   content: '';
   position: absolute;
@@ -144,9 +149,9 @@ router.afterEach(() => {
 .energy-icon {
   width: 32px;
   height: 32px;
-  background: url('https://cdn-icons-png.flaticon.com/512/9746/9746766.png') no-repeat center;
+  background: url('https://icon-library.com/images/electricity-icon/electricity-icon-15.jpg') no-repeat center;
   background-size: contain;
-  animation: subtlePulse 2s infinite;
+  animation: subtlePulse 5s infinite;
 }
 
 .animate-glow-text {
@@ -165,7 +170,20 @@ router.afterEach(() => {
 }
 
 @keyframes textGlow {
-  0%, 100% { color: #1e293b; }
-  50% { color: #1e40af; text-shadow: 0 0 4px rgba(96, 165, 250, 0.5); }
+  0%, 100% {
+    color: #1e293b;
+    text-shadow: none;
+  }
+  50% {
+    color: #3b82f6;
+    text-shadow: 0 0 6px rgba(59, 130, 246, 0.6);
+  }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
 }
 </style>

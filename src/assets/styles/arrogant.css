@@ -1,0 +1,91 @@
+/* arrogant.css */
+
+:root {
+    --indigo-deep: #312e81;
+    --blue-electric: #2563eb;
+    --blue-dark: #1e1b4b;
+    --blue-hover: #1d4ed8;
+    --ring-glow: rgba(59, 130, 246, 0.35);
+  }
+  
+  /* --- TIPOGRAFÍA --- */
+  .arrogant-heading {
+    font-size: 1.25rem;
+    letter-spacing: -0.015em;
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  
+  /* --- SOMBRAS PROFUNDAS --- */
+  .arrogant-shadow {
+    box-shadow: 0 12px 32px -8px rgba(30, 64, 175, 0.6),
+                0 4px 12px -4px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* --- ENLACES ARROGANTES --- */
+  .arrogant-link {
+    display: block;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: white;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .arrogant-link:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+    transform: translateX(3px) scale(1.02);
+    border-left: 4px solid var(--blue-electric);
+    box-shadow: inset 2px 0 0 var(--blue-electric);
+  }
+  
+  /* --- BOTONES CON IMPERIO VISUAL --- */
+  .arrogant-button {
+    background: linear-gradient(135deg, var(--indigo-deep), var(--blue-electric));
+    color: white;
+    font-weight: bold;
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .arrogant-button:hover {
+    background: linear-gradient(135deg, var(--blue-dark), var(--blue-hover));
+    transform: scale(1.03);
+    box-shadow: 0 6px 28px rgba(37, 99, 235, 0.6);
+  }
+  
+  /* --- MODALES IMPONENTES --- */
+  .arrogant-modal {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    max-width: 28rem;
+    width: 100%;
+    box-shadow: 0 0 0 4px var(--ring-glow), 0 30px 60px rgba(0, 0, 0, 0.2);
+    transform: scale(1);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  
+  /* --- TRANSICIÓN DE MODAL --- */
+  .fade-scale-enter-active,
+  .fade-scale-leave-active {
+    transition: all 0.3s ease;
+  }
+  
+  .fade-scale-enter-from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  
+  .fade-scale-leave-to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  

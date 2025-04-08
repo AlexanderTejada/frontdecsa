@@ -4,9 +4,9 @@
       <h2 class="text-2xl font-semibold text-slate-800">Mis Reclamos</h2>
       <button
         @click="abrirModalCrear"
-        class="relative text-white font-semibold text-base sm:text-sm px-5 py-2 sm:px-4 sm:py-2 rounded-lg shadow-md bg-gradient-to-r from-indigo-600 via-blue-500 to-sky-200 hover:from-indigo-700 hover:to-sky-500 transition-all duration-300 overflow-hidden"
+        class="relative text-white font-semibold text-base sm:text-sm px-5 cursor-pointer py-2 sm:px-4 sm:py-2 rounded-lg shadow-md bg-gradient-to-r from-indigo-600 via-blue-500 to-sky-200 hover:from-indigo-700 hover:to-sky-500 transition-all duration-300 overflow-hidden"
       >
-        <span class="relative z-10">+ Hacer Reclamo</span>
+        <span class="relative z-10" >+ Hacer Reclamo</span>
         <span class="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity duration-500"></span>
       </button>
     </div>

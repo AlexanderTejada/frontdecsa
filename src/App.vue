@@ -10,52 +10,61 @@
                ml-0 md:ml-[200px] lg:ml-[240px] xl:ml-[280px]
                w-full md:w-[calc(100%-200px)] lg:w-[calc(100%-240px)] xl:w-[calc(100%-280px)]"
       >
-        <header
-          class="bg-white px-4 py-2 sm:px-6 sm:py-5 border-b border-slate-200 flex items-center justify-between sticky top-0 energy-header shadow-sm"
-        >
-          <!-- BOTÓN MENÚ MOBILE -->
-          <button
-            @click="mostrarSidebarMobile = true"
-            class="md:hidden mr-2 text-slate-700 hover:text-slate-900"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M4 6h16M4 12h16M4 18h16"/>
-            </svg>
-          </button>
+   <header
+   class="bg-white/80 backdrop-blur-sm shadow-md rounded-b-xl px-8 py-3 sm:px-6 sm:py-5 flex items-center sticky top-1 z-50"
+   >
+  <!-- BOTÓN MENÚ MOBILE -->
+  <button
+    @click="mostrarSidebarMobile = true"
+    class="md:hidden mr-2 text-slate-700 hover:text-slate-900"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round"
+            d="M4 6h16M4 12h16M4 18h16"/>
+    </svg>
+  </button>
 
-          <!-- Identidad institucional -->
-          <div class="flex items-center space-x-3 overflow-hidden">
-            <div class="energy-icon shrink-0"></div>
-            <div class="leading-tight">
-              <h1 class="text-sm sm:text-lg font-semibold text-slate-800 animate-glow-text truncate">
-Distribuidora Eléctrica de Caucete S.A.              </h1>
-              <p class="hidden sm:block text-xs text-slate-500 truncate">
-                Compañía de servicios públicos de electricidad en Caucete
+  <!-- Identidad institucional -->
+  <div class="flex items-center space-x-3 overflow-hidden flex-grow">
+    <div class="energy-icon shrink-0"></div>
+    <div class="leading-tight text-left">
+      <!-- Título móvil reducido -->
+      <h1 class="block sm:hidden text-base font-bold text-slate-800 animate-glow-text">
+        DECSA
+      </h1>
 
+      <!-- Título completo en pantallas ≥ sm -->
+      <h1 class="hidden sm:block text-sm sm:text-lg font-semibold text-slate-800 animate-glow-text truncate">
+        Distribuidora Eléctrica de Caucete S.A.
+      </h1>
 
-              </p>
-            </div>
-          </div>
+      <!-- Subtítulo solo en pantallas ≥ sm -->
+      <p class="hidden sm:block text-xs text-slate-500 truncate">
+        Compañía de servicios públicos de electricidad en Caucete
+      </p>
+    </div>
+  </div>
 
-          <!-- Nombre de usuario -->
-          <div class="text-right leading-tight">
-            <router-link
-              v-if="tipoUsuario === 'cliente'"
-              to="/perfil"
-              class="text-sm sm:text-base font-medium text-indigo-700 hover:underline hover:text-indigo-900 transition-colors"
-            >
-              {{ nombreUsuario }}
-            </router-link>
-            <span
-              v-else
-              class="text-sm sm:text-base font-medium text-indigo-700"
-            >
-              {{ nombreUsuario }}
-            </span>
-          </div>
-        </header>
+  <!-- Nombre de usuario -->
+<!-- Nombre de usuario -->
+<div class="text-right leading-tight ml-auto">
+  <router-link
+    v-if="tipoUsuario === 'cliente'"
+    to="/perfil"
+    class="inline-block bg-blue-50 text-sm sm:text-base font-medium text-blue-700 hover:bg-blue-100 transition-colors px-3 py-1 rounded-full shadow-sm"
+  >
+    {{ nombreUsuario }}
+  </router-link>
+  <span
+    v-else
+    class="inline-block bg-indigo-50 text-sm sm:text-base font-medium text-indigo-700 px-3 py-1 rounded-full shadow-sm"
+  >
+    {{ nombreUsuario }}
+  </span>
+</div>
+
+</header>
 
         <transition name="fade" mode="out-in">
           <router-view />
@@ -67,6 +76,7 @@ Distribuidora Eléctrica de Caucete S.A.              </h1>
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';

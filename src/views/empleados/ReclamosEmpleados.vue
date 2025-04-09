@@ -65,7 +65,7 @@ class="cursor-pointer px-4 py-2 rounded-full bg-slate-200 hover:bg-slate-300 hov
         v-else
         class="overflow-y-auto max-h-[60vh] pr-2 border border-slate-300 rounded-xl shadow-md bg-slate-100/70 backdrop-blur-md p-4 transition-all duration-300"
       >
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-4">
           <ReclamoCardEmpleados
             v-for="reclamo in reclamosFiltrados"
             :key="reclamo.ID_RECLAMO"

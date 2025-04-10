@@ -19,10 +19,11 @@
       <!-- Navegación -->
       <nav class="flex-1 flex flex-col items-center justify-center gap-6 px-4 py-10 text-lg font-medium">
         <template v-if="tipoUsuario === 'cliente'">
-          <router-link to="/reclamos" class="nav-link" active-class="active" @click="cerrar">Reclamos</router-link>
-          <router-link to="/facturas" class="nav-link" active-class="active" @click="cerrar">Facturas</router-link>
-          <router-link to="/perfil" class="nav-link" active-class="active" @click="cerrar">Perfil</router-link>
-        </template>
+  <router-link to="/dashboard" class="nav-link" active-class="active" @click="cerrar">Inicio</router-link>
+  <router-link to="/reclamos" class="nav-link" active-class="active" @click="cerrar">Reclamos</router-link>
+  <router-link to="/facturas" class="nav-link" active-class="active" @click="cerrar">Facturas</router-link>
+  <router-link to="/perfil" class="nav-link" active-class="active" @click="cerrar">Perfil</router-link>
+</template>
 
         <template v-else-if="tipoUsuario === 'empleado'">
           <router-link to="/reclamos-empleados" class="nav-link" active-class="active" @click="cerrar">Reclamos</router-link>

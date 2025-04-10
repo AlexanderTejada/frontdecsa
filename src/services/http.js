@@ -5,7 +5,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    'Ngrok-Skip-Browser-Warning': '1',  // ⬅️ esta línea elimina el problema
+    'Ngrok-Skip-Browser-Warning': '1', 
   },
 });
 

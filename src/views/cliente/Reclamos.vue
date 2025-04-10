@@ -1,19 +1,25 @@
 <template>
   <div class="px-6 py-12 sm:px-4 sm:py-8 md:px-6 lg:px-12 xl:px-16 max-w-7xl mx-auto w-full">
+    <!-- Encabezado y botón -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
       <h2 class="text-2xl font-semibold text-slate-800">Mis Reclamos</h2>
+      
       <button
         @click="abrirModalCrear"
-        class="relative text-white font-semibold text-base sm:text-sm px-5 cursor-pointer py-2 sm:px-4 sm:py-2 rounded-lg shadow-md bg-gradient-to-r from-indigo-600 via-blue-500 to-sky-200 hover:from-indigo-700 hover:to-sky-500 transition-all duration-300 overflow-hidden"
+        class="relative text-white font-semibold text-base sm:text-sm px-5 py-2 sm:px-4 sm:py-2 rounded-lg
+               bg-gradient-to-r from-indigo-500 via-sky-500 to-blue-400 border border-indigo-600/30
+               shadow-md hover:shadow-lg transition-all duration-500 ease-in-out overflow-hidden"
       >
-        <span class="relative z-10" >+ Hacer Reclamo</span>
-        <span class="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity duration-500"></span>
+        <span class="relative z-10">+ Hacer Reclamo</span>
+        <span class="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity duration-700"></span>
       </button>
     </div>
 
+    <!-- Contenedor de reclamos -->
     <div class="relative">
       <div
-        class="overflow-y-auto max-h-[60vh] pr-2 border border-slate-300 rounded-xl shadow-md bg-slate-100/70 backdrop-blur-md p-4 transition-all duration-300"
+        class="overflow-y-auto max-h-[60vh] pr-2 border border-slate-200 rounded-xl
+               shadow-md bg-slate-100/60 backdrop-blur-sm p-4 transition-all duration-500 ease-in-out"
       >
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
           <ReclamoCard
@@ -25,16 +31,17 @@
         </div>
       </div>
 
-      <!-- Sombra inferior para suavizar el corte del scroll -->
-      <div class="pointer-events-none absolute bottom-0 left-0 right-0 h-16 rounded-b-xl bg-gradient-to-t from-slate-100/80 via-slate-100/60 to-transparent"></div>
+      <!-- Sombra inferior para scroll -->
+      <div class="pointer-events-none absolute bottom-0 left-0 right-0 h-16 rounded-b-xl
+                  bg-gradient-to-t from-slate-100/90 via-slate-100/60 to-transparent"></div>
     </div>
 
+    <!-- Modales -->
     <CrearReclamoModal
       v-if="mostrarModalCrear"
       @cerrar="mostrarModalCrear = false"
       @reclamoCreado="cargarReclamos"
     />
-
     <ReclamoDetalleModal
       v-if="reclamoSeleccionado"
       :reclamo="reclamoSeleccionado"

@@ -19,7 +19,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(255, 255, 255, 0.5); /* Más acorde al sistema blanco */
+    background-color: rgba(255, 255, 255, 0.815); /* Más acorde al sistema blanco */
     backdrop-filter: blur(4px);
     z-index: 9999;
   }

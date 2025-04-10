@@ -1,4 +1,4 @@
-// services/api.js
+// services/facturaService.js
 import api from './http';
 
 export async function obtenerFacturas(dni) {

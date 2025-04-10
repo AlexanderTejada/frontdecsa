@@ -107,7 +107,6 @@ const login = async () => {
       console.log('Usuario recibido:', JSON.stringify(usuarioData, null, 2));
       console.log('Suministro ingresado:', suministro.value);
 
-      // Manejar ambos formatos de CODIGO_SUMINISTRO
       const suministroDB = (usuarioData?.CODIGO_SUMINISTRO || usuarioData?.CodigoSuministro)?.toString().trim();
       const suministroIngresado = suministro.value.trim();
 
@@ -120,7 +119,7 @@ const login = async () => {
 
       localStorage.setItem('dni', dni.value);
       localStorage.setItem('tipoUsuario', 'cliente');
-      router.push('/reclamos');
+      router.push('/dashboard'); // 🟦 Redirección corregida
     } catch (err) {
       console.error('Error en login de cliente:', err);
       error.value = 'Error al intentar iniciar sesión.';
@@ -142,6 +141,7 @@ const login = async () => {
     }
   }
 };
+
 </script>
 
 <style scoped>
@@ -161,7 +161,6 @@ const login = async () => {
   width: 90%;
   max-width: 60em;
   min-height: 60vh;
-  border-radius: 1rem;
   overflow: hidden;
   box-shadow: 0 2em 4em rgba(0, 0, 0, 0.2);
   background: #fff;
@@ -238,7 +237,7 @@ const login = async () => {
 }
 
 .tipo-usuario button.active {
-  background: #3b82f6;
+  background: linear-gradient(to right, #5a0eb7, #1e60d6);
   color: white;
   border-color: #3b82f6;
 }
@@ -269,12 +268,10 @@ form {
 }
 
 button {
-  margin-top: 1em;
   padding: 0.9em;
   background: linear-gradient(to right, #6a11cb, #2575fc);
   color: white;
   border: none;
-  border-radius: 0.5em;
   font-size: 1em;
   font-weight: 600;
   cursor: pointer;
@@ -296,20 +293,21 @@ button:hover {
   /* Contenedor general */
   .login-box {
     flex-direction: column;
-    border-radius: 1.2rem;
     padding: 0;
     box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+
   }
 
   /* Lado izquierdo: bienvenida */
   .login-left {
-    padding: 1.5rem;
+    padding: 1.3rem;
     align-items: center;
     text-align: center;
   }
 
   .login-left h1 {
-    font-size: 1.5em;
+    font-size: 1.8em;
     text-align: center;
   }
 
@@ -318,7 +316,6 @@ button:hover {
     line-height: 1.5;
     max-width: 100%;
     padding: 0 1rem;
-    margin-top: 1rem;
     text-align: center;
   }
 
@@ -348,7 +345,7 @@ button:hover {
   }
 
   .tipo-usuario button.active {
-    background: #3b82f6;
+    background: linear-gradient(to right, #5a0eb7, #1e60d6);
     color: white;
     border-color: #3b82f6;
   }
@@ -363,7 +360,7 @@ button:hover {
   button[type="submit"] {
     padding: 1.2rem;
     font-size: 1.1em;
-    border-radius: 1em;
+    border-radius: 8px;
   }
 
   /* Error */

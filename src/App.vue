@@ -7,64 +7,87 @@
 
       <div
         class="flex flex-col flex-grow transition-all duration-300
-               ml-0 md:ml-[200px] lg:ml-[240px] xl:ml-[280px]
-               w-full md:w-[calc(100%-200px)] lg:w-[calc(100%-240px)] xl:w-[calc(100%-280px)]"
+                ml-0 md:ml-[200px] lg:ml-[240px] xl:ml-[280px]
+                w-full md:w-[calc(100%-200px)] lg:w-[calc(100%-240px)] xl:w-[calc(100%-280px)]"
       >
-   <header
-   class="bg-white/80 backdrop-blur-sm shadow-md rounded-b-xl px-8 py-3 sm:px-6 sm:py-5 flex items-center sticky top-1 z-50"
-   >
-  <!-- BOTÓN MENÚ MOBILE -->
-  <button
-    @click="mostrarSidebarMobile = true"
-    class="md:hidden mr-2 text-slate-700 hover:text-slate-900"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-      <path stroke-linecap="round" stroke-linejoin="round"
-            d="M4 6h16M4 12h16M4 18h16"/>
-    </svg>
-  </button>
+        <header
+          class="bg-white px-4 py-2 sm:px-6 sm:py-3 border-b border-slate-200 flex items-center sticky top-0 z-20 energy-header shadow-lg"
+        >
+          <!-- Contenedor Izquierdo para Mobile -->
+          <div class="flex items-center space-x-2 md:space-x-0">
+            <!-- Botón Hamburguesa Mobile con Animación -->
+            <button
+              @click="mostrarSidebarMobile = true"
+              class="md:hidden text-slate-700 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md p-1 transition-colors duration-300"
+              aria-label="Abrir menú"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 transform transition-transform duration-500 hover:scale-110"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
 
-  <!-- Identidad institucional -->
-  <div class="flex items-center space-x-3 overflow-hidden flex-grow">
-    <div class="energy-icon shrink-0"></div>
-    <div class="leading-tight text-left">
-      <!-- Título móvil reducido -->
-      <h1 class="block sm:hidden text-base font-bold text-slate-800 animate-glow-text">
-        DECSA
-      </h1>
+            <!-- Logo y Título con Efecto Hover -->
+            <router-link
+              to="/"
+              class="flex items-center space-x-2 sm:space-x-3 group focus:outline-none"
+            >
+              <div
+                class="energy-icon shrink-0 w-8 h-8 sm:w-10 sm:h-10 transition-transform duration-500 group-hover:scale-110"
+              ></div>
+              <div class="leading-tight text-left overflow-hidden">
+                <!-- Título Mobile -->
+                <h1
+                  class="block sm:hidden text-base font-bold text-slate-800 animate-glow-text transition-colors duration-300 group-hover:text-indigo-600"
+                >
+                  DECSA
+                </h1>
+                <!-- Título Desktop -->
+                <h1
+                  class="hidden sm:block text-sm sm:text-lg font-semibold text-slate-800 animate-glow-text transition-colors duration-300 group-hover:text-indigo-600 truncate"
+                >
+                  Distribuidora Eléctrica de Caucete S.A.
+                </h1>
+                <p
+                  class="hidden sm:block text-xs text-slate-500 transition-colors duration-300 group-hover:text-indigo-500 truncate"
+                >
+                  Compañía de servicios públicos de electricidad en Caucete
+                </p>
+              </div>
+            </router-link>
+          </div>
 
-      <!-- Título completo en pantallas ≥ sm -->
-      <h1 class="hidden sm:block text-sm sm:text-lg font-semibold text-slate-800 animate-glow-text truncate">
-        Distribuidora Eléctrica de Caucete S.A.
-      </h1>
+          <!-- Espaciador flexible para empujar el usuario a la derecha -->
+          <div class="flex-grow"></div>
 
-      <!-- Subtítulo solo en pantallas ≥ sm -->
-      <p class="hidden sm:block text-xs text-slate-500 truncate">
-        Compañía de servicios públicos de electricidad en Caucete
-      </p>
-    </div>
-  </div>
-
-  <!-- Nombre de usuario -->
-<!-- Nombre de usuario -->
-<div class="text-right leading-tight ml-auto">
-  <router-link
-    v-if="tipoUsuario === 'cliente'"
-    to="/perfil"
-    class="inline-block bg-blue-50 text-sm sm:text-base font-medium text-blue-700 hover:bg-blue-100 transition-colors px-3 py-1 rounded-full shadow-sm"
-  >
-    {{ nombreUsuario }}
-  </router-link>
-  <span
-    v-else
-    class="inline-block bg-indigo-50 text-sm sm:text-base font-medium text-indigo-700 px-3 py-1 rounded-full shadow-sm"
-  >
-    {{ nombreUsuario }}
-  </span>
-</div>
-
-</header>
+          <!-- Sección Usuario con Avatar -->
+          <div class="flex items-center space-x-2 sm:space-x-3">
+            <div class="relative group">
+              <div
+                class="flex items-center space-x-1 sm:space-x-2 focus:outline-none rounded-full p-1 transition-all duration-300"
+              >
+                <!-- Avatar Placeholder -->
+                <div
+                  class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-medium text-sm sm:text-base transition-transform duration-500 group-hover:scale-105"
+                >
+                  {{ nombreUsuario.charAt(0).toUpperCase() }}
+                </div>
+                <!-- Nombre Usuario -->
+                <span
+                  class="hidden sm:flex items-center text-sm sm:text-base font-medium text-indigo-700 transition-colors duration-300 group-hover:text-indigo-900"
+                >
+                  {{ nombreUsuario }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </header>
 
         <transition name="fade" mode="out-in">
           <router-view />
@@ -76,7 +99,6 @@
     </div>
   </div>
 </template>
-
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
@@ -102,11 +124,10 @@ const cerrarSidebar = () => {
 const cargarNombreUsuario = async () => {
   if (tipoUsuario.value === 'cliente') {
     const dni = localStorage.getItem('dni');
-    if (!dni) {
-      if (!esLogin.value) router.push('/login');
+    if (!dni && !esLogin.value) {
+      router.push('/login');
       return;
     }
-
     try {
       const usuario = await obtenerUsuario(dni);
       nombreUsuario.value = usuario.NOMBRE_COMPLETO || usuario.NombreCompleto || 'Usuario Desconocido';
@@ -117,8 +138,8 @@ const cargarNombreUsuario = async () => {
     nombreUsuario.value = localStorage.getItem('usuario') || 'Admin';
   }
 };
-onMounted(cargarNombreUsuario);
 
+onMounted(cargarNombreUsuario);
 watch(route, () => {
   if (!esLogin.value) cargarNombreUsuario();
 });
@@ -135,14 +156,14 @@ router.afterEach(() => {
 
 <style scoped>
 .energy-bg {
-  background: #f8fafc;
+  background: linear-gradient(to bottom, #f8fafc, #e2e8f0);
   position: relative;
 }
 
 .energy-header {
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.5s ease;
 }
 
 .energy-header::before {
@@ -151,11 +172,15 @@ router.afterEach(() => {
   top: 0;
   left: -100%;
   width: 50%;
-  height: 1px;
+  height: 2px;
   background: linear-gradient(to right, transparent, #60a5fa, transparent);
   animation: energyFlowHeader 4s infinite ease-in-out;
 }
 
+.energy-icon {
+  background: url('/path-to-your-logo.png') no-repeat center;
+  background-size: contain;
+}
 
 .animate-glow-text {
   animation: textGlow 3s infinite ease-in-out;
@@ -167,26 +192,21 @@ router.afterEach(() => {
   100% { left: 150%; }
 }
 
-@keyframes subtlePulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-}
-
 @keyframes textGlow {
   0%, 100% {
-    color: #1e293b;
-    text-shadow: none;
+    text-shadow: 0 0 4px rgba(59, 130, 246, 0.2);
   }
   50% {
-    color: #3b82f6;
-    text-shadow: 0 0 6px rgba(59, 130, 246, 0.6);
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
   }
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.3s ease;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
 }
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 </style>

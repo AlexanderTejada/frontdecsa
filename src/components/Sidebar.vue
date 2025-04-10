@@ -11,6 +11,11 @@
     <nav class="flex-1 px-4 py-5 space-y-2 overflow-y-auto">
       <template v-if="tipoUsuario === 'cliente'">
         <router-link
+          to="/dashboard"
+          class="nav-link"
+          active-class="bg-slate-800 ring-1 ring-white/10"
+        >Inicio</router-link>
+        <router-link
           to="/reclamos"
           class="nav-link"
           active-class="bg-slate-800 ring-1 ring-white/10"
@@ -52,7 +57,7 @@
     </div>
   </aside>
 
-  <!-- Modal de confirmación fuera del sidebar -->
+  <!-- Modal de confirmación -->
   <Teleport to="body">
     <transition name="fade-scale">
       <div
@@ -125,7 +130,6 @@ const confirmarLogout = () => {
   position: relative;
   cursor: pointer;
 }
-
 .nav-link:hover {
   background-color: rgba(255, 255, 255, 0.05);
   transform: translateX(2px);

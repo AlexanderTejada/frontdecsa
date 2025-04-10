@@ -1,18 +1,26 @@
 <template>
   <div
-    class="w-full p-4 bg-white/80 border border-gray-200 rounded-xl shadow-sm hover:shadow-md hover:border-blue-400 transition cursor-pointer backdrop-blur-sm
-           max-w-sm xl:max-w-xs 2xl:max-w-sm"
+    class="w-full p-4 bg-white/80 border border-gray-200 rounded-xl shadow-sm
+           hover:shadow-md hover:brightness-105 hover:-translate-y-0.5
+           hover:border-blue-400 transition-all duration-500 ease-in-out cursor-pointer backdrop-blur-sm
+           max-w-sm xl:max-w-xs 2xl:max-w-sm transform-gpu"
   >
     <!-- Encabezado -->
     <div class="flex justify-between items-start mb-2 border-b pb-2">
       <div class="flex flex-col">
-        <h3 class="text-blue-800 font-semibold text-sm xl:text-xs">Reclamo #{{ reclamo.ID_RECLAMO }}</h3>
-        <p class="text-gray-500 text-xs xl:text-[0.65rem]">{{ reclamo.fecha }} {{ reclamo.hora }}</p>
+        <h3
+          class="font-semibold text-sm xl:text-xs bg-gradient-to-r from-indigo-600 to-blue-400 bg-clip-text text-transparent"
+        >
+          Reclamo #{{ reclamo.ID_RECLAMO }}
+        </h3>
+        <p class="text-gray-500 text-xs xl:text-[0.65rem]">
+          {{ reclamo.fecha }} {{ reclamo.hora }}
+        </p>
       </div>
 
       <span
         :class="estadoClass"
-        class="text-xs xl:text-[0.65rem] font-medium px-2 py-0.5 rounded-md flex items-center gap-1 border"
+        class="text-xs xl:text-[0.65rem] font-medium px-2 py-0.5 rounded-md flex items-center gap-1 border transition-colors duration-300"
       >
         ● {{ reclamo.estado }}
       </span>
@@ -20,8 +28,12 @@
 
     <!-- Cuerpo -->
     <div class="grid grid-cols-2 gap-2 xl:gap-1.5 text-sm xl:text-xs text-gray-700">
-      <p><strong class="text-blue-800">Medidor:</strong> {{ reclamo.medidor }}</p>
-      <p><strong class="text-blue-800">Suministro:</strong> {{ reclamo.numeroSuministro }}</p>
+      <p>
+        <strong class="text-blue-800">Medidor:</strong> {{ reclamo.medidor }}
+      </p>
+      <p>
+        <strong class="text-blue-800">Suministro:</strong> {{ reclamo.numeroSuministro }}
+      </p>
       <p class="col-span-2">
         <strong class="text-blue-800">Descripción:</strong> {{ descripcionRecortada }}
       </p>

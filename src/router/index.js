@@ -4,6 +4,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Reclamos from '../views/cliente/Reclamos.vue';
 import Facturas from '../views/cliente/Facturas.vue';
 import Perfil from '../views/cliente/Perfil.vue';
+import ChatClienteMobile from '../views/cliente/ChatClienteMobile.vue';
+
 import ReclamosEmpleados from '../views/empleados/ReclamosEmpleados.vue';
 import Chatbot from '../views/empleados/Chatbot.vue';
 import GestionUsuarios from '../views/empleados/GestionUsuarios.vue';
@@ -13,12 +15,15 @@ const routes = [
   { path: '/login', component: Login },
   { path: '/', redirect: '/login' },
   { path: '/dashboard', component: () => import('../views/cliente/DashboardCliente.vue'), meta: { requiresCliente: true } },
+  { path: '/chat', component: ChatClienteMobile, meta: { requiresCliente: true } },
+
   { path: '/reclamos', component: Reclamos, meta: { requiresCliente: true } },
   { path: '/facturas', component: Facturas, meta: { requiresCliente: true } },
   { path: '/perfil', component: Perfil, meta: { requiresCliente: true } },
   { path: '/reclamos-empleados', component: ReclamosEmpleados, meta: { requiresEmpleado: true } },
   { path: '/chatbot', component: Chatbot, meta: { requiresEmpleado: true } },
   { path: '/gestion-usuarios', component: GestionUsuarios, meta: { requiresAdmin: true } },
+  
 ];
 
 const router = createRouter({

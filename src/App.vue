@@ -11,7 +11,7 @@
                 w-full md:w-[calc(100%-200px)] lg:w-[calc(100%-240px)] xl:w-[calc(100%-280px)]"
       >
         <header
-          class="bg-white px-4 py-2 sm:px-6 sm:py-3 border-b border-slate-200 flex items-center sticky top-0 z-20 energy-header shadow-lg"
+          class="bg-white px-4 py-2 sm:px-6 sm:py-3 border-b border-slate-200 flex items-center sticky top-0 z-20 energy-header"
         >
           <!-- Contenedor Izquierdo para Mobile -->
           <div class="flex items-center space-x-2 md:space-x-0">
@@ -98,9 +98,16 @@
       <Spinner v-if="loading" />
     </div>
   </div>
+  <MobileNav v-if="mostrarSidebarMobile" @cerrar="mostrarSidebarMobile = false" />
+<Spinner v-if="loading" />
+<ChatCliente v-if="tipoUsuario === 'cliente'" />
+
+
 </template>
 
 <script setup>
+import ChatCliente from '@/components/cliente/ChatCliente.vue';
+
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Sidebar from '@/components/Sidebar.vue';
@@ -161,8 +168,7 @@ router.afterEach(() => {
 }
 
 .energy-header {
-  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #ffffff00 0%, #f1f5f900 100%);
   transition: all 0.5s ease;
 }
 

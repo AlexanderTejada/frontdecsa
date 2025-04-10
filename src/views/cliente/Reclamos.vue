@@ -5,14 +5,16 @@
       <h2 class="text-2xl font-semibold text-slate-800">Mis Reclamos</h2>
       
       <button
-        @click="abrirModalCrear"
-        class="relative text-white font-semibold text-base sm:text-sm px-5 py-2 sm:px-4 sm:py-2 rounded-lg
-               bg-gradient-to-r from-indigo-500 via-sky-500 to-blue-400 border border-indigo-600/30
-               shadow-md hover:shadow-lg transition-all duration-500 ease-in-out overflow-hidden"
-      >
-        <span class="relative z-10">+ Hacer Reclamo</span>
-        <span class="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity duration-700"></span>
-      </button>
+  @click="abrirModalCrear"
+  class="relative z-10 font-semibold text-base sm:text-sm px-5 py-2 sm:px-4 sm:py-2 rounded-lg
+         bg-gradient-to-r from-indigo-500 via-sky-500 to-blue-400 border border-indigo-600/30
+         text-white shadow-md hover:shadow-lg transition-all duration-500 ease-in-out overflow-hidden
+         cursor-pointer"
+>
+  <span class="relative z-10">+ Hacer Reclamo</span>
+  <span class="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity duration-700"></span>
+</button>
+
     </div>
 
     <!-- Contenedor de reclamos -->

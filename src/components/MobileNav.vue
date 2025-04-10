@@ -19,11 +19,12 @@
       <!-- Navegación -->
       <nav class="flex-1 flex flex-col items-center justify-center gap-6 px-4 py-10 text-lg font-medium">
         <template v-if="tipoUsuario === 'cliente'">
-  <router-link to="/dashboard" class="nav-link" active-class="active" @click="cerrar">Inicio</router-link>
-  <router-link to="/reclamos" class="nav-link" active-class="active" @click="cerrar">Reclamos</router-link>
-  <router-link to="/facturas" class="nav-link" active-class="active" @click="cerrar">Facturas</router-link>
-  <router-link to="/perfil" class="nav-link" active-class="active" @click="cerrar">Perfil</router-link>
-</template>
+          <router-link to="/dashboard" class="nav-link" active-class="active" @click="cerrar">Inicio</router-link>
+          <router-link to="/reclamos" class="nav-link" active-class="active" @click="cerrar">Reclamos</router-link>
+          <router-link to="/facturas" class="nav-link" active-class="active" @click="cerrar">Facturas</router-link>
+          <router-link to="/perfil" class="nav-link" active-class="active" @click="cerrar">Perfil</router-link>
+          <router-link to="/chat" class="nav-link" active-class="active" @click="cerrar">Asistente Virtual</router-link>
+        </template>
 
         <template v-else-if="tipoUsuario === 'empleado'">
           <router-link to="/reclamos-empleados" class="nav-link" active-class="active" @click="cerrar">Reclamos</router-link>
@@ -31,7 +32,7 @@
         </template>
       </nav>
 
-      <!-- Botón salir -->
+      <!-- Botón cerrar sesión -->
       <div class="px-4 pb-6 flex justify-center">
         <button @click="mostrarConfirmacion = true" class="logout-button">
           Cerrar sesión
@@ -64,11 +65,10 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const emit = defineEmits(['cerrar'])
-
 const router = useRouter()
+
 const mostrar = ref(false)
 const mostrarConfirmacion = ref(false)
-
 const tipoUsuario = computed(() => localStorage.getItem('tipoUsuario') || 'cliente')
 
 onMounted(() => {

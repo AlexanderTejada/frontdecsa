@@ -151,7 +151,7 @@ const login = async () => {
   justify-content: center;
   min-height: 100vh;
   padding: 4vh 4vw;
-  background: linear-gradient(135deg, #ffffff, #8db6ff);
+  background: linear-gradient(135deg, #b0d8f3, #fdfdfd);
   box-sizing: border-box;
 }
 

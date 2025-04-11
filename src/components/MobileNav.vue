@@ -23,6 +23,7 @@
           <router-link to="/reclamos" class="nav-link" active-class="active" @click="cerrar">Reclamos</router-link>
           <router-link to="/facturas" class="nav-link" active-class="active" @click="cerrar">Facturas</router-link>
           <router-link to="/perfil" class="nav-link" active-class="active" @click="cerrar">Perfil</router-link>
+          <router-link to="/chat" class="nav-link" active-class="active" @click="cerrar">Asistente Reclamos</router-link>
         </template>
 
         <template v-else-if="tipoUsuario === 'empleado'">

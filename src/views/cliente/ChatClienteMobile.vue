@@ -176,7 +176,7 @@ onMounted(scrollToBottom)
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s ease;
 }
 .fade-enter-from,
 .fade-leave-to {
@@ -195,5 +195,25 @@ onMounted(scrollToBottom)
 }
 .animate-fadeInUp {
   animation: fadeInUp 0.4s ease-out;
+}
+
+/* Estilos para contenido HTML renderizado (iframes, enlaces, etc.) */
+iframe {
+  max-width: 100%;
+  width: 100%;
+  height: 180px;
+  border: 0;
+  margin-top: 0.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: block;
+}
+
+a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+a:hover {
+  color: #1e40af;
 }
 </style>

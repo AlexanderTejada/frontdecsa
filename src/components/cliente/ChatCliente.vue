@@ -1,5 +1,5 @@
 <template>
-    <div class="hidden sm:block fixed bottom-8 right-8 z-50">
+    <div class="hidden sm:block fixed bottom-8 right-8 ">
       <!-- Bot animado flotante con fondo blanco -->
       <div
         class="w-[5.5rem] h-[5.5rem] rounded-full bg-white shadow-xl ring-1 ring-slate-200 hover:ring-blue-500 transition-all flex items-center justify-center cursor-pointer"

@@ -23,7 +23,6 @@
           <router-link to="/reclamos" class="nav-link" active-class="active" @click="cerrar">Reclamos</router-link>
           <router-link to="/facturas" class="nav-link" active-class="active" @click="cerrar">Facturas</router-link>
           <router-link to="/perfil" class="nav-link" active-class="active" @click="cerrar">Perfil</router-link>
-          <router-link to="/chat" class="nav-link" active-class="active" @click="cerrar">Asistente Virtual</router-link>
         </template>
 
         <template v-else-if="tipoUsuario === 'empleado'">
@@ -65,10 +64,11 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const emit = defineEmits(['cerrar'])
-const router = useRouter()
 
+const router = useRouter()
 const mostrar = ref(false)
 const mostrarConfirmacion = ref(false)
+
 const tipoUsuario = computed(() => localStorage.getItem('tipoUsuario') || 'cliente')
 
 onMounted(() => {

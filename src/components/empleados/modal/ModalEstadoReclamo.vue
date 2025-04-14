@@ -32,7 +32,6 @@
             <p><strong>Nombre:</strong> {{ reclamo.cliente.nombre }}</p>
             <p><strong>DNI:</strong> {{ reclamo.cliente.dni }}</p>
   <p><strong>Fecha del reclamo:</strong> {{ reclamo.fecha }} {{ reclamo.hora }}</p>
-  <p><strong>Fecha de cierre:</strong> {{ reclamo.fechaCierre }} {{ reclamo.horaCierre }}</p>
 
   <p><strong>Suministro:</strong> {{ reclamo.numeroSuministro }}</p>
   <p><strong>Código Postal:</strong> {{ reclamo.codigo_postal }}</p>

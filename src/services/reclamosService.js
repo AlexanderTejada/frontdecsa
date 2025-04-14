@@ -1,13 +1,23 @@
-// services/reclamosService.js
 import api from './http';
 
+// 🔹 BOT: solo los últimos 5 reclamos
 export async function obtenerReclamos(dni) {
   try {
     const response = await api.get(`/api/reclamos/${dni}`);
-    // Asegurarse de que response.data sea un objeto y tenga la propiedad reclamos
     return response.data && typeof response.data === 'object' ? response.data : { reclamos: [] };
   } catch (error) {
-    console.error('Error al obtener reclamos:', error);
+    console.error('Error al obtener reclamos (limitado):', error);
+    return { reclamos: [] };
+  }
+}
+
+// 🔹 FRONTEND: todos los reclamos por DNI (nuevo endpoint)
+export async function obtenerTodosLosReclamosPorDni(dni) {
+  try {
+    const response = await api.get(`/api/reclamos/todos/${dni}`);
+    return response.data && Array.isArray(response.data.reclamos) ? response.data : { reclamos: [] };
+  } catch (error) {
+    console.error('Error al obtener todos los reclamos:', error);
     return { reclamos: [] };
   }
 }
@@ -17,7 +27,7 @@ export async function obtenerTodosLosReclamos() {
     const response = await api.get('/api/reclamos/');
     return response.data;
   } catch (error) {
-    console.error('Error al obtener todos los reclamos:', error);
+    console.error('Error al obtener todos los reclamos del sistema:', error);
     return [];
   }
 }

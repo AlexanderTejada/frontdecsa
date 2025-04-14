@@ -8,7 +8,7 @@
       <div
         v-for="(message, index) in messages"
         :key="index"
-        :class="[ 
+        :class="[
           'max-w-xl px-5 py-3 rounded-xl text-sm shadow-md whitespace-pre-wrap break-words',
           message.sender === 'user'
             ? 'bg-blue-600 text-white self-end ml-auto'
@@ -73,10 +73,36 @@ const adjustTextareaHeight = () => {
   }
 };
 
+const formatResponse = (text) => {
+  // Decodificar entidades Unicode y reemplazar saltos de línea
+  const decoded = text
+    .replace(/\\u[\dA-F]{4}/gi, (match) => String.fromCharCode(parseInt(match.replace('\\u', ''), 16)))
+    .replace(/\n/g, '<br>')
+    .replace(/\s{2,}/g, ' ');
+  // Aplicar formato simple
+  return decoded.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+};
+
+const typeMessage = async (text, index) => {
+  const words = text.trim().split(' ');
+  let currentText = '';
+  for (const word of words) {
+    currentText += word + ' ';
+    messages.value[index] = {
+      sender: 'bot',
+      text: formatResponse(currentText),
+      isTyping: false,
+    };
+    await new Promise((resolve) => setTimeout(resolve, 40));
+    await nextTick();
+    scrollToBottom();
+  }
+};
+
 const sendMessage = async () => {
   if (!inputMessage.value.trim() || isLoading.value) return;
 
-  // Agrega mensaje del usuario
+  // Agregar mensaje del usuario
   messages.value.push({
     sender: 'user',
     text: inputMessage.value,
@@ -89,42 +115,67 @@ const sendMessage = async () => {
   adjustTextareaHeight();
   scrollToBottom();
 
-  // Crea contenedor para la respuesta del bot
-  const newMessageIndex = messages.value.push({
+  // Agregar placeholder para el mensaje del bot
+  const newMessageIndex = messages.value.length;
+  messages.value.push({
     sender: 'bot',
     text: '',
     isTyping: true,
-  }) - 1;
+  });
 
   try {
-    const response = await fetch('http://n8nendpoint.duckdns.org:3000/consultar', {
+    const response = await fetch('http://localhost:5000/api/chatbot/proxy/consultar', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'text/event-stream',
       },
-      body: JSON.stringify({ message: userMessage }),
+      body: JSON.stringify({ query: userMessage }),
     });
+
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
+    }
 
     const reader = response.body.getReader();
     const decoder = new TextDecoder('utf-8');
     let result = '';
 
+    // Acumular todos los fragmentos
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
 
       const chunk = decoder.decode(value, { stream: true });
-      result += chunk;
-      messages.value[newMessageIndex].text = result;
-      scrollToBottom();
+      const lines = chunk.split('\n').filter(line => line.trim());
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          try {
+            const json = JSON.parse(line.replace('data: ', ''));
+            if (json.response) {
+              result += json.response;
+            }
+          } catch (e) {
+            // Silenciar errores de parseo menores
+          }
+        }
+      }
     }
 
+    // Renderizar la respuesta completa con efecto de escritura
     messages.value[newMessageIndex].isTyping = false;
+    if (result.trim()) {
+      await typeMessage(result, newMessageIndex);
+    } else {
+      throw new Error('Respuesta vacía del backend');
+    }
   } catch (error) {
-    console.error('Error al obtener respuesta del bot:', error);
-    messages.value[newMessageIndex].isTyping = false;
-    messages.value[newMessageIndex].text =
-      'Lo siento, ocurrió un error al consultar. Intenta nuevamente.';
+    console.error('Error al procesar el stream:', error);
+    messages.value[newMessageIndex] = {
+      sender: 'bot',
+      text: 'Lo siento, ocurrió un error al consultar. Intenta nuevamente.',
+      isTyping: false,
+    };
   } finally {
     isLoading.value = false;
     scrollToBottom();

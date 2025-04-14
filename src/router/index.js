@@ -9,21 +9,26 @@ import ChatClienteMobile from '../views/cliente/ChatClienteMobile.vue';
 import ReclamosEmpleados from '../views/empleados/ReclamosEmpleados.vue';
 import Chatbot from '../views/empleados/Chatbot.vue';
 import GestionUsuarios from '../views/empleados/GestionUsuarios.vue';
+import DashboardAdministrativo from '../views/empleados/DashboardAdministrativo.vue';
+
 import Login from '../views/Login.vue';
 
 const routes = [
   { path: '/login', component: Login },
   { path: '/', redirect: '/login' },
+
+  // Cliente
   { path: '/dashboard', component: () => import('../views/cliente/DashboardCliente.vue'), meta: { requiresCliente: true } },
   { path: '/chat', component: ChatClienteMobile, meta: { requiresCliente: true } },
-
   { path: '/reclamos', component: Reclamos, meta: { requiresCliente: true } },
   { path: '/facturas', component: Facturas, meta: { requiresCliente: true } },
   { path: '/perfil', component: Perfil, meta: { requiresCliente: true } },
+
+  // Empleado
+  { path: '/dashboard-admin', component: DashboardAdministrativo, meta: { requiresEmpleado: true } },
   { path: '/reclamos-empleados', component: ReclamosEmpleados, meta: { requiresEmpleado: true } },
   { path: '/chatbot', component: Chatbot, meta: { requiresEmpleado: true } },
   { path: '/gestion-usuarios', component: GestionUsuarios, meta: { requiresAdmin: true } },
-  
 ];
 
 const router = createRouter({
@@ -77,7 +82,7 @@ router.beforeEach((to, from, next) => {
     if (tipoUsuario === 'cliente') {
       next('/dashboard');
     } else if (tipoUsuario === 'empleado') {
-      next('/reclamos-empleados');
+      next('/dashboard-admin'); // 🔹 redirigido al nuevo dashboard
     }
     return;
   }

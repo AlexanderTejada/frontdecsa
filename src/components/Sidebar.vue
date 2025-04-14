@@ -36,6 +36,10 @@
       </template>
 
       <template v-else-if="tipoUsuario === 'empleado'">
+        <router-link to="/dashboard-admin" class="nav-link" active-class="active">
+          <HomeIcon class="w-5 h-5" />
+          <span v-if="!collapsed">Inicio</span>
+        </router-link>
         <router-link to="/reclamos-empleados" class="nav-link" active-class="active">
           <InboxIcon class="w-5 h-5" />
           <span v-if="!collapsed">Reclamos</span>

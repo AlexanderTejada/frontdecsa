@@ -34,10 +34,12 @@
         :class="['mb-3 flex flex-col', message.sender === 'user' ? 'items-end' : 'items-start']"
       >
         <div
-          :class="[message.sender === 'user'
-            ? 'bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-br-sm'
-            : 'bg-slate-200 text-slate-800 rounded-bl-sm border-l-4 border-indigo-300 shadow-sm animate-fadeInUp',
-          'px-3 py-2 rounded-lg max-w-[85%] text-sm leading-snug']"
+          :class="[
+            message.sender === 'user'
+              ? 'bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-br-sm'
+              : 'bg-slate-200 text-slate-800 rounded-bl-sm border-l-4 border-indigo-300 shadow-sm animate-fadeInUp',
+            'px-3 py-2 rounded-lg max-w-[85%] text-sm leading-snug'
+          ]"
         >
           <span v-if="message.isTyping" class="flex gap-1">
             <span class="animate-bounce">.</span>
@@ -141,9 +143,7 @@ const fetchBotResponse = async (message) => {
     .map((m) => `${m.sender === 'user' ? 'Usuario' : 'DECSA'}: ${m.text}`)
     .join(' | ')
 
-  const url = `${import.meta.env.VITE_BACKEND_URL}/api/frontend-chatbot/chat`
-
-  const response = await fetch(url, {
+  const response = await fetch('http://localhost:5000/api/frontend-chatbot/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ mensaje: message, historial }),
@@ -197,6 +197,7 @@ onMounted(scrollToBottom)
   animation: fadeInUp 0.4s ease-out;
 }
 
+/* Estilos para contenido HTML renderizado (iframes, enlaces, etc.) */
 iframe {
   max-width: 100%;
   width: 100%;

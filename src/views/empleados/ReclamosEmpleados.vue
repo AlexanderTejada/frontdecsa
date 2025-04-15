@@ -1,11 +1,11 @@
 <template>
-  <div class="px-6 py-12 sm:px-4 sm:py-8 md:px-6 lg:px-12 xl:px-10 max-w-8xl mx-auto w-full">
+  <div class="px-6 py-12 sm:px-6 sm:py-10 md:px-10 lg:px-16 xl:px-20 max-w-7xl mx-auto w-full">
     <!-- Encabezado -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-10">
       <h2 class="text-2xl font-semibold text-slate-800">Reclamos de Todos los Clientes</h2>
       <button
         @click="irAlMesActual"
-        class="cursor-pointer relative text-white font-semibold text-base sm:text-sm px-5 py-2 sm:px-4 sm:py-3 rounded-lg shadow-md bg-gradient-to-r from-indigo-600 via-blue-500 to-sky-200 hover:from-indigo-700 hover:to-sky-500 transition-all duration-300 overflow-hidden"
+        class="cursor-pointer relative text-white font-medium text-base sm:text-sm px-6 py-2.5 sm:px-5 sm:py-2 rounded-lg shadow-sm bg-gradient-to-r from-indigo-600 via-blue-500 to-sky-300 hover:from-indigo-700 hover:to-sky-500 transition-all duration-300 overflow-hidden"
       >
         <span class="relative z-10">Mes actual</span>
         <span class="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity duration-500"></span>
@@ -13,7 +13,7 @@
     </div>
 
     <!-- Navegación por mes y año -->
-    <div class="flex items-center justify-center mb-6 gap-4 flex-wrap">
+    <div class="flex items-center justify-center mb-8 gap-6 flex-wrap">
       <button
         @click="mesAnterior"
         class="cursor-pointer px-4 py-2 rounded-full bg-slate-200 hover:bg-slate-300 hover:shadow-md transition hover:scale-105 text-slate-700"
@@ -26,31 +26,46 @@
 
       <button
         @click="mesSiguiente"
-class="cursor-pointer px-4 py-2 rounded-full bg-slate-200 hover:bg-slate-300 hover:shadow-md transition hover:scale-105 text-slate-700"
+        class="cursor-pointer px-4 py-2 rounded-full bg-slate-200 hover:bg-slate-300 hover:shadow-md transition hover:scale-105 text-slate-700"
         aria-label="Mes siguiente"
       >
         ›
       </button>
     </div>
 
-    <!-- Filtros -->
-    <div class="flex flex-col sm:flex-row sm:justify-center sm:items-center gap-4 mb-6 text-center">
-      <input
-        v-model="busqueda"
-        type="text"
-        placeholder="Buscar por nombre, DNI, medidor o suministro"
-        class="w-full sm:w-[300px] px-4 py-2 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
-      <select
-        v-model="filtroEstado"
-        class="w-full sm:w-[120px] px-4 py-2 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
-      >
-        <option value="Todos">Todos</option>
-        <option value="Pendiente">Pendiente</option>
-        <option value="En proceso">En proceso</option>
-        <option value="Resuelto">Resuelto</option>
-      </select>
-    </div>
+  <!-- Filtros -->
+<div class="flex flex-wrap gap-4 mb-6">
+  <input
+    v-model="busqueda"
+    type="text"
+    placeholder="Nombre, DNI, medidor o suministro"
+    class="border border-slate-300 rounded-lg px-3 py-2 text-sm w-full sm:w-[240px] md:w-[280px] lg:w-[300px]"
+  />
+
+  <select
+    v-model="filtroEstado"
+    class="border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white w-full sm:w-[160px]"
+  >
+    <option value="Todos">Todos los estados</option>
+    <option value="Pendiente">Pendiente</option>
+    <option value="En proceso">En proceso</option>
+    <option value="Resuelto">Resuelto</option>
+  </select>
+
+  <select
+    v-model="filtroBarrio"
+    class="border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white w-full sm:w-[180px]"
+  >
+    <option value="Todos">Todos los barrios</option>
+    <option
+      v-for="barrio in barriosDisponibles"
+      :key="barrio"
+      :value="barrio"
+    >
+      {{ barrio }}
+    </option>
+  </select>
+</div>
 
     <!-- Resultados -->
     <div class="relative">
@@ -63,9 +78,9 @@ class="cursor-pointer px-4 py-2 rounded-full bg-slate-200 hover:bg-slate-300 hov
 
       <div
         v-else
-        class="overflow-y-auto max-h-[60vh] pr-2 border border-slate-300 rounded-xl shadow-md bg-slate-100/70 backdrop-blur-md p-4 transition-all duration-300"
+        class="overflow-y-auto max-h-[60vh] pr-2 border border-slate-300 rounded-xl shadow-md bg-slate-100/70 backdrop-blur-md p-6 transition-all duration-300"
       >
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-4gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-6">
           <ReclamoCardEmpleados
             v-for="reclamo in reclamosFiltrados"
             :key="reclamo.ID_RECLAMO"
@@ -78,17 +93,19 @@ class="cursor-pointer px-4 py-2 rounded-full bg-slate-200 hover:bg-slate-300 hov
       <div class="pointer-events-none absolute bottom-0 left-0 right-0 h-16 rounded-b-xl bg-gradient-to-t from-slate-100/80 via-slate-100/60 to-transparent"></div>
     </div>
 
-    <!-- Modal -->
-    <ModalEstadoReclamo
-      v-if="modalAbierto"
-      :reclamo="reclamoSeleccionado"
-      :loading="loading"
-      :error="error"
-      :nuevoEstado="nuevoEstado"
-      @updateEstado="actualizarEstado"
-      @cerrar="cerrarModal"
-      @update:nuevoEstado="nuevoEstado = $event"
-    />
+    <!-- Modal con transición -->
+    <Transition name="fade" mode="out-in">
+      <ModalEstadoReclamo
+        v-if="modalAbierto"
+        :reclamo="reclamoSeleccionado"
+        :loading="loading"
+        :error="error"
+        :nuevoEstado="nuevoEstado"
+        @updateEstado="actualizarEstado"
+        @cerrar="cerrarModal"
+        @update:nuevoEstado="nuevoEstado = $event"
+      />
+    </Transition>
   </div>
 </template>
 
@@ -101,6 +118,8 @@ import ModalEstadoReclamo from '@/components/empleados/modal/ModalEstadoReclamo.
 const reclamos = ref([]);
 const busqueda = ref('');
 const filtroEstado = ref('Todos');
+const filtroBarrio = ref('Todos');
+
 const modalAbierto = ref(false);
 const reclamoSeleccionado = ref(null);
 const nuevoEstado = ref('');
@@ -183,13 +202,30 @@ const obtenerReclamos = async () => {
   }
 };
 
+const barriosDisponibles = computed(() => {
+  const barrios = new Set();
+  reclamos.value.forEach(r => {
+    if (r.barrio && r.barrio !== 'Sin barrio') {
+      barrios.add(r.barrio);
+    }
+  });
+  return Array.from(barrios).sort((a, b) => a.localeCompare(b));
+});
+
 const reclamosFiltrados = computed(() => {
   let resultados = reclamos.value;
 
+  // Filtro por estado
   if (filtroEstado.value !== 'Todos') {
     resultados = resultados.filter(r => r.estado === filtroEstado.value);
   }
 
+  // Filtro por barrio
+  if (filtroBarrio.value !== 'Todos') {
+    resultados = resultados.filter(r => r.barrio === filtroBarrio.value);
+  }
+
+  // Filtro por mes y año
   resultados = resultados.filter(r => {
     const fecha = new Date(r.fecha.split('/').reverse().join('-'));
     return (
@@ -198,6 +234,7 @@ const reclamosFiltrados = computed(() => {
     );
   });
 
+  // Filtro por búsqueda libre
   if (!busqueda.value.trim()) return resultados;
 
   const filtro = busqueda.value.toLowerCase();
@@ -244,3 +281,13 @@ const actualizarEstado = async () => {
 
 onMounted(obtenerReclamos);
 </script>
+
+
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+</style>

@@ -1,24 +1,29 @@
-// router/index.js
 import { createRouter, createWebHistory } from 'vue-router';
 
+// Cliente
 import Reclamos from '../views/cliente/Reclamos.vue';
 import Facturas from '../views/cliente/Facturas.vue';
 import Perfil from '../views/cliente/Perfil.vue';
 import ChatClienteMobile from '../views/cliente/ChatClienteMobile.vue';
+import DashboardCliente from '../views/cliente/DashboardCliente.vue';
 
+// Empleado
 import ReclamosEmpleados from '../views/empleados/ReclamosEmpleados.vue';
 import Chatbot from '../views/empleados/Chatbot.vue';
 import GestionUsuarios from '../views/empleados/GestionUsuarios.vue';
 import DashboardAdministrativo from '../views/empleados/DashboardAdministrativo.vue';
+import Avisos from '../views/empleados/Avisos.vue';
 
+// Login
 import Login from '../views/Login.vue';
 
 const routes = [
+  // Acceso y redirección base
   { path: '/login', component: Login },
   { path: '/', redirect: '/login' },
 
   // Cliente
-  { path: '/dashboard', component: () => import('../views/cliente/DashboardCliente.vue'), meta: { requiresCliente: true } },
+  { path: '/dashboard', component: DashboardCliente, meta: { requiresCliente: true } },
   { path: '/chat', component: ChatClienteMobile, meta: { requiresCliente: true } },
   { path: '/reclamos', component: Reclamos, meta: { requiresCliente: true } },
   { path: '/facturas', component: Facturas, meta: { requiresCliente: true } },
@@ -28,7 +33,10 @@ const routes = [
   { path: '/dashboard-admin', component: DashboardAdministrativo, meta: { requiresEmpleado: true } },
   { path: '/reclamos-empleados', component: ReclamosEmpleados, meta: { requiresEmpleado: true } },
   { path: '/chatbot', component: Chatbot, meta: { requiresEmpleado: true } },
-  { path: '/gestion-usuarios', component: GestionUsuarios, meta: { requiresAdmin: true } },
+  { path: '/avisos', component: Avisos, meta: { requiresEmpleado: true } },
+
+  // Habilitado temporalmente para cualquier "empleado"
+  { path: '/gestion-usuarios', component: GestionUsuarios, meta: { requiresEmpleado: true } }
 ];
 
 const router = createRouter({
@@ -41,50 +49,28 @@ router.beforeEach((to, from, next) => {
   const dniGuardado = localStorage.getItem('dni');
   const tokenGuardado = localStorage.getItem('token');
 
-  // Cliente
+  // 🔐 Cliente
   if (to.meta.requiresCliente) {
     if (!dniGuardado || tipoUsuario !== 'cliente') {
-      next('/login');
-      return;
+      return next('/login');
     }
   }
 
-  // Empleado
+  // 🔐 Empleado
   if (to.meta.requiresEmpleado) {
     if (!tokenGuardado || tipoUsuario !== 'empleado') {
-      next('/login');
-      return;
+      return next('/login');
     }
   }
 
-  // Admin
-  if (to.meta.requiresAdmin) {
-    if (!tokenGuardado || tipoUsuario !== 'empleado') {
-      next('/login');
-      return;
-    }
-
-    const usuario = localStorage.getItem('usuario');
-    if (usuario !== 'pruebamodifica') {
-      next('/reclamos-empleados');
-      return;
-    }
-  }
-
-  // Sin sesión y fuera de login
-  if (to.path !== '/login' && !dniGuardado && !tokenGuardado) {
-    next('/login');
-    return;
-  }
-
-  // Ya logueado, redirigir desde login
+  // 🔄 Redirección si ya hay sesión activa
   if (to.path === '/login' && (dniGuardado || tokenGuardado)) {
-    if (tipoUsuario === 'cliente') {
-      next('/dashboard');
-    } else if (tipoUsuario === 'empleado') {
-      next('/dashboard-admin'); // 🔹 redirigido al nuevo dashboard
-    }
-    return;
+    return next(tipoUsuario === 'cliente' ? '/dashboard' : '/dashboard-admin');
+  }
+
+  // 🔐 Bloqueo si intenta navegar sin sesión
+  if (to.path !== '/login' && !dniGuardado && !tokenGuardado) {
+    return next('/login');
   }
 
   next();

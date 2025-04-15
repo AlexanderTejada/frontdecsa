@@ -2,7 +2,7 @@
   <aside
     :class="[collapsed ? 'w-[80px]' : 'w-[220px] lg:w-[250px] xl:w-[280px]', 'hidden md:flex flex-col h-screen fixed top-0 left-0 z-40 bg-gradient-to-b from-slate-900 via-slate-900 to-indigo-950 backdrop-blur-md shadow-2xl text-white rounded-tr-[2.5rem] transition-all duration-300']"
   >
-    <!-- Encabezado con botón colapsar -->
+    <!-- Encabezado -->
     <div class="px-4 py-5 border-b border-slate-700 flex items-center justify-between">
       <h2 class="text-lg font-bold tracking-wide text-white/90" v-if="!collapsed">DECSA</h2>
       <button
@@ -16,6 +16,7 @@
 
     <!-- Navegación -->
     <nav class="flex-1 px-2 py-5 space-y-2 overflow-y-auto">
+      <!-- CLIENTE -->
       <template v-if="tipoUsuario === 'cliente'">
         <router-link to="/dashboard" class="nav-link" active-class="active">
           <HomeIcon class="w-5 h-5" />
@@ -35,6 +36,7 @@
         </router-link>
       </template>
 
+      <!-- EMPLEADO -->
       <template v-else-if="tipoUsuario === 'empleado'">
         <router-link to="/dashboard-admin" class="nav-link" active-class="active">
           <HomeIcon class="w-5 h-5" />
@@ -48,19 +50,36 @@
           <CpuChipIcon class="w-5 h-5" />
           <span v-if="!collapsed">Chatbot</span>
         </router-link>
+        <router-link to="/avisos" class="nav-link" active-class="active">
+          <MegaphoneIcon class="w-5 h-5" />
+          <span v-if="!collapsed">Avisos</span>
+        </router-link>
+        <!-- ADMIN -->
+        <router-link
+          v-if="tipoUsuario === 'empleado'"
+          to="/gestion-usuarios"
+          class="nav-link"
+          active-class="active"
+        >
+          <Cog6ToothIcon class="w-5 h-5" />
+          <span v-if="!collapsed">Gestión Usuarios</span>
+        </router-link>
       </template>
     </nav>
 
     <!-- Cierre de sesión -->
     <div class="px-3 pb-6">
-      <button @click="mostrarConfirmacion = true" class="w-full flex items-center gap-2 px-3 py-2 text-red-400 hover:bg-red-500 hover:text-white rounded-md transition text-sm font-medium cursor-pointer">
+      <button
+        @click="mostrarConfirmacion = true"
+        class="w-full flex items-center gap-2 px-3 py-2 text-red-400 hover:bg-red-500 hover:text-white rounded-md transition text-sm font-medium cursor-pointer"
+      >
         <ArrowLeftOnRectangleIcon class="w-5 h-5" />
         <span v-if="!collapsed">Cerrar sesión</span>
       </button>
     </div>
   </aside>
 
-  <!-- Modal de confirmación -->
+  <!-- Modal confirmación -->
   <Teleport to="body">
     <transition name="fade-scale">
       <div v-if="mostrarConfirmacion" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center">
@@ -82,8 +101,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import {
   HomeIcon,
   ChatBubbleBottomCenterTextIcon,
@@ -93,20 +112,25 @@ import {
   InboxIcon,
   CpuChipIcon,
   ChevronDoubleLeftIcon,
-  ChevronDoubleRightIcon
-} from '@heroicons/vue/24/solid'
+  ChevronDoubleRightIcon,
+  MegaphoneIcon,
+  Cog6ToothIcon
+} from '@heroicons/vue/24/solid';
 
-const router = useRouter()
-const mostrarConfirmacion = ref(false)
-const collapsed = ref(false)
-const tipoUsuario = computed(() => localStorage.getItem('tipoUsuario') || 'cliente')
+const router = useRouter();
+const mostrarConfirmacion = ref(false);
+const collapsed = ref(false);
+
+const tipoUsuario = computed(() => localStorage.getItem('tipoUsuario') || 'cliente');
+const usuario = localStorage.getItem('usuario') || '';
 
 const confirmarLogout = () => {
-  localStorage.removeItem('dni')
-  localStorage.removeItem('token')
-  localStorage.removeItem('tipoUsuario')
-  router.push('/login')
-}
+  localStorage.removeItem('dni');
+  localStorage.removeItem('token');
+  localStorage.removeItem('tipoUsuario');
+  localStorage.removeItem('usuario');
+  router.push('/login');
+};
 </script>
 
 <style scoped>
@@ -114,9 +138,7 @@ const confirmarLogout = () => {
 .fade-scale-leave-active {
   transition: all 0.3s ease;
 }
-.fade-scale-enter-from {
-  opacity: 0;
-}
+.fade-scale-enter-from,
 .fade-scale-leave-to {
   opacity: 0;
 }

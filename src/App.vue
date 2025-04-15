@@ -1,7 +1,9 @@
 <template>
   <div>
+    <!-- Solo login -->
     <router-view v-if="esLogin" />
 
+    <!-- Resto del sistema -->
     <div v-else class="flex min-h-screen overflow-x-hidden energy-bg">
       <Sidebar />
 
@@ -10,103 +12,61 @@
                 ml-0 md:ml-[200px] lg:ml-[240px] xl:ml-[280px]
                 w-full md:w-[calc(100%-200px)] lg:w-[calc(100%-240px)] xl:w-[calc(100%-280px)]"
       >
-        <header
-          class="bg-white px-4 py-2 sm:px-6 sm:py-3 border-b border-slate-200 flex items-center sticky top-0 z-20 energy-header"
-        >
-          <!-- Contenedor Izquierdo para Mobile -->
+        <!-- HEADER -->
+        <header class="energy-header px-4 py-2 sm:px-6 sm:py-3 border-b border-slate-200 flex items-center sticky top-0 z-20">
+          <!-- BOTÓN MOBILE + LOGO -->
           <div class="flex items-center space-x-2 md:space-x-0">
-            <!-- Botón Hamburguesa Mobile con Animación -->
             <button
               @click="mostrarSidebarMobile = true"
-              class="md:hidden text-slate-700 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md p-1 transition-colors duration-300"
+              class="md:hidden text-slate-700 hover:text-indigo-600 p-1 rounded-md transition"
               aria-label="Abrir menú"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 transform transition-transform duration-500 hover:scale-110"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hover:scale-110 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
 
-            <!-- Logo y Título con Efecto Hover -->
-            <router-link
-              to="/"
-              class="flex items-center space-x-2 sm:space-x-3 group focus:outline-none"
-            >
-              <div
-                class="energy-icon shrink-0 w-8 h-8 sm:w-10 sm:h-10 transition-transform duration-500 group-hover:scale-110"
-              ></div>
+            <router-link to="/" class="flex items-center space-x-2 group">
+              <div class="energy-icon w-8 h-8 sm:w-10 sm:h-10 group-hover:scale-110 transition"></div>
               <div class="leading-tight text-left overflow-hidden">
-                <!-- Título Mobile -->
-                <h1
-                  class="block sm:hidden text-base font-bold text-slate-800 animate-glow-text transition-colors duration-300 group-hover:text-indigo-600"
-                >
-                  DECSA
-                </h1>
-                <!-- Título Desktop -->
-                <h1
-                  class="hidden sm:block text-sm sm:text-lg font-semibold text-slate-800 animate-glow-text transition-colors duration-300 group-hover:text-indigo-600 truncate"
-                >
-                  Distribuidora Eléctrica de Caucete S.A.
-                </h1>
-                <p
-                  class="hidden sm:block text-xs text-slate-500 transition-colors duration-300 group-hover:text-indigo-500 truncate"
-                >
-                  Compañía de servicios públicos de electricidad en Caucete
-                </p>
+                <h1 class="block sm:hidden text-base font-bold text-slate-800 animate-glow-text group-hover:text-indigo-600">DECSA</h1>
+                <h1 class="hidden sm:block text-sm sm:text-lg font-semibold text-slate-800 animate-glow-text group-hover:text-indigo-600 truncate">Distribuidora Eléctrica de Caucete S.A.</h1>
+                <p class="hidden sm:block text-xs text-slate-500 group-hover:text-indigo-500 truncate">Compañía de servicios públicos</p>
               </div>
             </router-link>
           </div>
 
-          <!-- Espaciador flexible para empujar el usuario a la derecha -->
           <div class="flex-grow"></div>
 
-          <!-- Sección Usuario con Avatar -->
-          <div class="flex items-center space-x-2 sm:space-x-3">
-            <div class="relative group">
-              <div
-                class="flex items-center space-x-1 sm:space-x-2 focus:outline-none rounded-full p-1 transition-all duration-300"
-              >
-                <!-- Avatar Placeholder -->
-                <div
-                  class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-medium text-sm sm:text-base transition-transform duration-500 group-hover:scale-105"
-                >
-                  {{ nombreUsuario.charAt(0).toUpperCase() }}
-                </div>
-                <!-- Nombre Usuario -->
-                <span
-                  class="hidden sm:flex items-center text-sm sm:text-base font-medium text-indigo-700 transition-colors duration-300 group-hover:text-indigo-900"
-                >
-                  {{ nombreUsuario }}
-                </span>
-              </div>
+          <!-- NOMBRE USUARIO -->
+          <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-medium text-sm sm:text-base">
+              {{ nombreUsuario.charAt(0).toUpperCase() }}
             </div>
+            <span class="hidden sm:inline text-sm sm:text-base font-medium text-indigo-700">
+              {{ nombreUsuario }}
+            </span>
           </div>
         </header>
 
+        <!-- VISTAS -->
         <router-view v-slot="{ Component }">
-  <transition name="fade" mode="out-in">
-    <component :is="Component" :key="$route.fullPath" />
-  </transition>
-</router-view>
-
+          <transition name="fade" mode="out-in">
+            <component :is="Component" :key="$route.fullPath" />
+          </transition>
+        </router-view>
       </div>
 
-      <MobileNav v-if="mostrarSidebarMobile" @cerrar="mostrarSidebarMobile = false" />
-      <Spinner v-if="loading" />
+      <!-- SIDEBAR MOBILE -->
+      <MobileNav v-if="mostrarSidebarMobile" @cerrar="cerrarSidebar" />
     </div>
+
+    <!-- SPINNER Y CHAT -->
+    <Spinner v-if="loading" />
+    <ChatCliente v-if="tipoUsuario === 'cliente' && !esLogin" />
   </div>
-  <MobileNav v-if="mostrarSidebarMobile" @cerrar="mostrarSidebarMobile = false" />
-<Spinner v-if="loading" />
-<ChatCliente v-if="tipoUsuario === 'cliente'" />
-
-
 </template>
+
 
 <script setup>
 import ChatCliente from '@/components/cliente/ChatCliente.vue';

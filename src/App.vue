@@ -1,11 +1,9 @@
 <template>
   <div>
-    <!-- Solo login -->
-    <router-view v-if="esLogin" />
-
-    <!-- Resto del sistema -->
-    <div v-else class="flex min-h-screen overflow-x-hidden energy-bg">
-      <Sidebar />
+    <!-- Sistema completo (Login incluido) -->
+    <div class="flex min-h-screen overflow-x-hidden energy-bg">
+      <!-- Sidebar -->
+      <Sidebar v-if="!esLogin" />
 
       <div
         class="flex flex-col flex-grow transition-all duration-300
@@ -13,8 +11,7 @@
                 w-full md:w-[calc(100%-200px)] lg:w-[calc(100%-240px)] xl:w-[calc(100%-280px)]"
       >
         <!-- HEADER -->
-        <header class="energy-header px-4 py-2 sm:px-6 sm:py-3 border-b border-slate-200 flex items-center sticky top-0 z-20">
-          <!-- BOTÓN MOBILE + LOGO -->
+        <header v-if="!esLogin" class="energy-header px-4 py-2 sm:px-6 sm:py-3 border-b border-slate-200 flex items-center sticky top-0 z-20">
           <div class="flex items-center space-x-2 md:space-x-0">
             <button
               @click="mostrarSidebarMobile = true"
@@ -38,7 +35,6 @@
 
           <div class="flex-grow"></div>
 
-          <!-- NOMBRE USUARIO -->
           <div class="flex items-center space-x-2">
             <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-medium text-sm sm:text-base">
               {{ nombreUsuario.charAt(0).toUpperCase() }}
@@ -49,7 +45,7 @@
           </div>
         </header>
 
-        <!-- VISTAS -->
+        <!-- VISTAS DINÁMICAS -->
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <component :is="Component" :key="$route.fullPath" />
@@ -57,7 +53,7 @@
         </router-view>
       </div>
 
-      <!-- SIDEBAR MOBILE -->
+      <!-- NAV MOBILE -->
       <MobileNav v-if="mostrarSidebarMobile" @cerrar="cerrarSidebar" />
     </div>
 
@@ -67,19 +63,19 @@
   </div>
 </template>
 
-
 <script setup>
-import ChatCliente from '@/components/cliente/ChatCliente.vue';
-
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+
 import Sidebar from '@/components/Sidebar.vue';
 import MobileNav from '@/components/MobileNav.vue';
 import Spinner from '@/components/comunes/Spinner.vue';
+import ChatCliente from '@/components/cliente/ChatCliente.vue';
 import { obtenerUsuario } from '@/services/usuariosService';
 
 const route = useRoute();
 const router = useRouter();
+
 const loading = ref(false);
 const nombreUsuario = ref('');
 const mostrarSidebarMobile = ref(false);
@@ -114,8 +110,11 @@ watch(route, () => {
   if (!esLogin.value) cargarNombreUsuario();
 });
 
+// Excluir rutas del spinner
+const rutasSinSpinner = ['/empleados'];
+
 router.beforeEach((to, from, next) => {
-  loading.value = true;
+  loading.value = !rutasSinSpinner.includes(to.path);
   next();
 });
 

@@ -1,36 +1,42 @@
 <template>
   <div
     @click="emitirDetalles"
-    class="w-full p-4 bg-white/80 border border-gray-200 rounded-xl shadow-sm hover:shadow-md hover:border-blue-400 transition cursor-pointer backdrop-blur-sm
-           max-w-sm xl:max-w-xs 2xl:max-w-sm"
+    class="w-full bg-white/80 border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer backdrop-blur-sm
+           max-w-sm xl:max-w-xs 2xl:max-w-sm relative"
   >
-    <!-- Encabezado con ID, fecha, cliente y estado -->
-    <div class="border-b pb- mb-2 flex justify-between items-start">
-      <div class="flex flex-col">
-        <h3 class="text-blue-800 font-semibold text-sm xl:text-xs">R. #{{ ID_RECLAMO }}</h3>
-        <p class="text-gray-500 text-xs xl:text-[0.65rem]">{{ fecha }} {{ hora }}</p>
-        <p class="text-gray-600 text-[0.65rem] xl:text-[0.6rem] mt-0.2 leading-tight">
-          {{ cliente.nombre }}<br>
-          <span class="text-gray-400">(DNI: {{ cliente.dni }})</span>
-        </p>
+    <!-- Borde superior según prioridad -->
+    <div :class="prioridadBarClass" class="absolute top-0 left-0 w-full h-1 rounded-t-xl"></div>
+
+    <!-- Contenido principal -->
+    <div class="p-4">
+      <!-- Encabezado -->
+      <div class="border-b pb-2 mb-2 flex justify-between items-start">
+        <div class="flex flex-col">
+          <h3 class="text-blue-800 font-semibold text-sm xl:text-xs">R. #{{ ID_RECLAMO }}</h3>
+          <p class="text-gray-500 text-xs xl:text-[0.65rem]">{{ fecha }} {{ hora }}</p>
+          <p class="text-gray-600 text-[0.65rem] xl:text-[0.6rem] mt-0.2 leading-tight">
+            {{ cliente.nombre }}<br>
+            <span class="text-gray-400">(DNI: {{ cliente.dni }})</span>
+          </p>
+        </div>
+
+        <span
+          :class="estadoClass"
+          class="text-xs xl:text-[0.65rem] font-medium px-2 py-0.5 rounded-md flex items-center gap-1 border"
+        >
+          ● {{ estado }}
+        </span>
       </div>
 
-      <span
-        :class="estadoClass"
-        class="text-xs xl:text-[0.65rem] font-medium px-2 py-0.5 rounded-md flex items-center gap-1 border"
-      >
-        ● {{ estado }}
-      </span>
-    </div>
-
-    <!-- Cuerpo de la tarjeta -->
-    <div class="grid grid-cols-2 gap-2 xl:gap-1.5 text-sm xl:text-xs text-gray-700">
-      <p><strong class="text-blue-800">Dirección:</strong> {{ truncatedDireccion }}</p>
-      <p><strong class="text-blue-800">Suministro:</strong> {{ numeroSuministro }}</p>
-      <p><strong class="text-blue-800">Medidor:</strong> {{ medidor }}</p>
-      <p class="col-span-1 break-words overflow-hidden leading-snug text-sm xl:text-xs">
-        <strong class="text-blue-800">Descripción:</strong> {{ truncatedDescripcion }}
-      </p>
+      <!-- Cuerpo de la tarjeta -->
+      <div class="grid grid-cols-2 gap-2 xl:gap-1.5 text-sm xl:text-xs text-gray-700">
+        <p><strong class="text-blue-800">Dirección:</strong> {{ truncatedDireccion }}</p>
+        <p><strong class="text-blue-800">Suministro:</strong> {{ numeroSuministro }}</p>
+        <p><strong class="text-blue-800">Medidor:</strong> {{ medidor }}</p>
+        <p class="col-span-1 break-words overflow-hidden leading-snug text-sm xl:text-xs">
+          <strong class="text-blue-800">Descripción:</strong> {{ truncatedDescripcion }}
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -50,6 +56,7 @@ const {
   calle,
   barrio,
   codigo_postal,
+  prioridad,
 } = defineProps({
   ID_RECLAMO: Number,
   fecha: String,
@@ -62,11 +69,11 @@ const {
   calle: String,
   barrio: String,
   codigo_postal: String,
+  prioridad: String,
 });
 
 const emit = defineEmits(['verDetalles']);
 
-// Truncamiento dinámico según el tamaño de pantalla
 const truncatedDescripcion = computed(() => {
   const limite = window.innerWidth <= 620 ? 30 : 50;
   return descripcion.length > limite ? `${descripcion.substring(0, limite)}...` : descripcion;
@@ -78,7 +85,6 @@ const truncatedDireccion = computed(() => {
   return direccion.length > limite ? `${direccion.substring(0, limite)}...` : direccion;
 });
 
-// Clases de color para el estado, compatibles con Tailwind
 const estadoClass = computed(() => {
   switch (estado) {
     case 'Resuelto':
@@ -92,12 +98,26 @@ const estadoClass = computed(() => {
   }
 });
 
+const prioridadBarClass = computed(() => {
+  switch (prioridad) {
+    case 'Alta':
+      return 'bg-red-500';
+    case 'Media':
+      return 'bg-yellow-400';
+    case 'Baja':
+      return 'bg-green-500';
+    default:
+      return 'bg-gray-300';
+  }
+});
+
 const emitirDetalles = () => {
   emit('verDetalles', {
     ID_RECLAMO,
     fecha,
     hora,
     estado,
+    prioridad,
     cliente,
     numeroSuministro,
     medidor,

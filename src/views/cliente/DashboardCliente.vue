@@ -1,8 +1,8 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { obtenerUsuario } from '@/services/usuariosService';
-import { obtenerFacturas } from '@/services/facturasService';
-import { obtenerReclamos } from '@/services/reclamosService';
+import { ref, onMounted } from 'vue'
+import { obtenerUsuario } from '@/services/usuariosService'
+import { obtenerFacturas } from '@/services/facturasService'
+import { obtenerReclamos } from '@/services/reclamosService'
 
 // Heroicons
 import {
@@ -11,40 +11,62 @@ import {
   CheckCircleIcon,
   ExclamationCircleIcon,
   ExclamationTriangleIcon
-} from '@heroicons/vue/24/solid';
+} from '@heroicons/vue/24/solid'
 
-const dni = localStorage.getItem('dni');
-const nombreCliente = ref('');
-const suministro = ref('');
-const cantidadReclamos = ref(0);
-const totalPendientes = ref(0);
+const dni = localStorage.getItem('dni')
+const nombreCliente = ref('')
+const suministro = ref('')
+const cantidadReclamos = ref(0)
+const totalPendientes = ref(0)
 
 const cargarDatos = async () => {
   try {
-    const cliente = await obtenerUsuario(dni);
-    nombreCliente.value = cliente.NOMBRE_COMPLETO || cliente.NombreCompleto || 'Cliente';
-    suministro.value = cliente.CODIGO_SUMINISTRO || cliente.CodigoSuministro || '---';
+    if (!dni || dni === 'null') {
+      console.warn('⚠️ DNI no válido en localStorage:', dni)
+      return
+    }
 
-    const respuestaReclamos = await obtenerReclamos(dni);
-    const ahora = new Date();
-    const mesActual = ahora.getMonth();
-    const anioActual = ahora.getFullYear();
+    // Cliente
+    const cliente = await obtenerUsuario(dni)
+    nombreCliente.value =
+      cliente.NOMBRE_COMPLETO || cliente.NombreCompleto || cliente.nombre_completo || 'Cliente'
+    suministro.value =
+      cliente.CODIGO_SUMINISTRO || cliente.CodigoSuministro || cliente.codigo_suministro || '---'
 
-    cantidadReclamos.value = (respuestaReclamos.reclamos || []).filter(r => {
-      const fecha = new Date(r.FECHA_RECLAMO);
-      return fecha.getMonth() === mesActual && fecha.getFullYear() === anioActual;
-    }).length;
+    // Reclamos
+    const respuestaReclamos = await obtenerReclamos(dni)
+    const reclamos = Array.isArray(respuestaReclamos?.reclamos)
+      ? respuestaReclamos.reclamos
+      : Array.isArray(respuestaReclamos)
+      ? respuestaReclamos
+      : []
 
-    const respuestaFacturas = await obtenerFacturas(dni);
-    const todas = respuestaFacturas?.facturas || [];
-    totalPendientes.value = todas.filter(f => f.Estado?.toLowerCase() === 'pendiente').length;
+    console.log('📄 Reclamos recibidos:', reclamos)
 
+    const ahora = new Date()
+    const mesActual = ahora.getMonth()
+    const anioActual = ahora.getFullYear()
+
+    cantidadReclamos.value = reclamos.filter(r => {
+      const fecha = new Date(r.fecha || r.FECHA_RECLAMO || r.fecha_reclamo)
+      return fecha.getMonth() === mesActual && fecha.getFullYear() === anioActual
+    }).length
+
+    // Facturas
+    const respuestaFacturas = await obtenerFacturas(dni)
+    const todas = respuestaFacturas?.facturas || []
+    totalPendientes.value = todas.filter(f =>
+      (f.Estado || f.estado)?.toLowerCase() === 'pendiente'
+    ).length
   } catch (error) {
-    console.error('Error al cargar el dashboard:', error);
+    console.error('❌ Error al cargar el dashboard:', error)
   }
-};
-onMounted(cargarDatos);
+}
+
+onMounted(cargarDatos)
 </script>
+
+
 <template>
     <div class="max-w-6xl mx-auto w-full px-6 py-12">
       <!-- Encabezado con subrayado animado -->

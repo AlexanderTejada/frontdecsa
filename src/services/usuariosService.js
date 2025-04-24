@@ -1,7 +1,7 @@
-// services/usuarioService.js
-
+// src/services/usuariosService.js
 import api from './http';
 
+// 🔹 Obtener datos de un usuario por DNI
 export async function obtenerUsuario(dni) {
   try {
     const response = await api.get(`/api/usuarios/${dni}`);
@@ -12,6 +12,7 @@ export async function obtenerUsuario(dni) {
   }
 }
 
+// 🔹 Actualizar datos de usuario por DNI
 export async function actualizarDatosUsuario(dni, datos) {
   try {
     const response = await api.put(`/api/usuarios/${dni}`, datos);

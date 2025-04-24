@@ -1,54 +1,66 @@
-import api from './http';
+// src/services/reclamosService.js
 
-// 🔹 BOT: solo los últimos 5 reclamos
-export async function obtenerReclamos(dni) {
-  try {
-    const response = await api.get(`/api/reclamos/${dni}`);
-    return response.data && typeof response.data === 'object' ? response.data : { reclamos: [] };
-  } catch (error) {
-    console.error('Error al obtener reclamos (limitado):', error);
-    return { reclamos: [] };
-  }
-}
+import api from './http'
 
-// 🔹 FRONTEND: todos los reclamos por DNI (nuevo endpoint)
-export async function obtenerTodosLosReclamosPorDni(dni) {
-  try {
-    const response = await api.get(`/api/reclamos/todos/${dni}`);
-    return response.data && Array.isArray(response.data.reclamos) ? response.data : { reclamos: [] };
-  } catch (error) {
-    console.error('Error al obtener todos los reclamos:', error);
-    return { reclamos: [] };
-  }
-}
-
+// 🔹 Listar todos los reclamos del sistema (incluye datos de cliente)
 export async function obtenerTodosLosReclamos() {
   try {
-    const response = await api.get('/api/reclamos/');
-    return response.data;
+    const res = await api.get('/api/reclamos/')
+    return Array.isArray(res.data) ? res.data : []
   } catch (error) {
-    console.error('Error al obtener todos los reclamos del sistema:', error);
+    console.error('Error al obtener todos los reclamos del sistema:', error)
+    return []
+  }
+}
+
+export async function obtenerTodosLosReclamosPorDni(dni) {
+  try {
+    const res = await api.get(`/api/reclamos/todos/${dni}`);
+    return res.data?.reclamos || [];
+  } catch (error) {
+    console.error('Error al obtener todos los reclamos por DNI:', error);
     return [];
   }
 }
 
-export async function crearReclamo(dni, descripcion) {
+// 🔹 Últimos 5 reclamos por DNI (BOT o dashboard)
+export async function obtenerReclamos(dni, limit = 5) {
   try {
-    const response = await api.post(`/api/reclamos/${dni}`, {
-      descripcion,
-    });
-    return response.data;
+    const res = await api.get(`/api/reclamos/${dni}`)
+    const reclamos = Array.isArray(res.data)
+      ? res.data
+      : Array.isArray(res.data?.reclamos)
+      ? res.data.reclamos
+      : []
+
+    return reclamos.slice(-limit)
   } catch (error) {
-    throw error;
+    console.error('Error al obtener reclamos (limitado):', error)
+    return []
   }
 }
 
-export async function actualizarEstadoReclamo(idReclamo, nuevoEstado) {
+// 🔹 Crear un nuevo reclamo
+export async function crearReclamo(dni, descripcion, prioridad = 'Media') {
   try {
-    const response = await api.put(`/api/reclamos/${idReclamo}`, { estado: nuevoEstado });
-    return response.data;
+    const res = await api.post(`/api/reclamos/${dni}`, {
+      descripcion,
+      prioridad
+    })
+    return res.data
   } catch (error) {
-    console.error('Error al actualizar estado del reclamo:', error);
-    throw error;
+    console.error('Error al crear reclamo:', error)
+    throw error
+  }
+}
+
+// 🔹 Actualizar estado de un reclamo por ID
+export async function actualizarEstadoReclamo(idReclamo, estado) {
+  try {
+    const res = await api.put(`/api/reclamos/${idReclamo}`, { estado })
+    return res.data
+  } catch (error) {
+    console.error('Error al actualizar estado del reclamo:', error)
+    throw error
   }
 }

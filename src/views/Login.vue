@@ -85,64 +85,82 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { obtenerUsuario } from '@/services/usuariosService';
-import api from '@/services/http';
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { obtenerUsuario } from '@/services/usuariosService'
+import api from '@/services/http'
 
-const tipoUsuario = ref('cliente');
-const dni = ref('');
-const suministro = ref('');
-const usuario = ref('');
-const contrasena = ref('');
-const error = ref('');
-const router = useRouter();
+const tipoUsuario = ref('cliente')
+const dni = ref('')
+const suministro = ref('')
+const usuario = ref('')
+const contrasena = ref('')
+const error = ref('')
+const router = useRouter()
 
 const login = async () => {
-  error.value = '';
+  error.value = ''
 
   if (tipoUsuario.value === 'cliente') {
+    const dniTrimmed = dni.value.trim()
+
+    if (!dniTrimmed || dniTrimmed === 'null') {
+      error.value = 'Debe ingresar un DNI válido.'
+      return
+    }
+
     try {
-      const usuarioData = await obtenerUsuario(dni.value);
-      console.log('Usuario recibido:', JSON.stringify(usuarioData, null, 2));
-      console.log('Suministro ingresado:', suministro.value);
+      const usuarioData = await obtenerUsuario(dniTrimmed)
+      console.log('🔎 Usuario recibido:', usuarioData)
 
-      const suministroDB = (usuarioData?.CODIGO_SUMINISTRO || usuarioData?.CodigoSuministro)?.toString().trim();
-      const suministroIngresado = suministro.value.trim();
+      const suministroDB = (
+        usuarioData?.codigo_suministro ||
+        usuarioData?.CODIGO_SUMINISTRO ||
+        usuarioData?.CodigoSuministro ||
+        ''
+      ).toString().trim()
 
-      if (!usuarioData || suministroDB !== suministroIngresado) {
-        console.warn('Suministro esperado:', suministroDB);
-        console.warn('Suministro ingresado:', suministroIngresado);
-        error.value = 'Credenciales inválidas.';
-        return;
+      const suministroIngresado = suministro.value.trim()
+
+      if (!usuarioData || suministroIngresado !== suministroDB) {
+        console.warn('⚠️ Suministro no coincide:', suministroIngresado, 'vs', suministroDB)
+        error.value = 'Credenciales inválidas.'
+        return
       }
 
-      localStorage.setItem('dni', dni.value);
-      localStorage.setItem('tipoUsuario', 'cliente');
-      router.push('/dashboard'); // 🟦 Redirección corregida
+      console.log('🔐 Guardando DNI en localStorage:', dniTrimmed)
+      localStorage.setItem('dni', dniTrimmed)
+      localStorage.setItem('tipoUsuario', 'cliente')
+      router.push('/dashboard')
     } catch (err) {
-      console.error('Error en login de cliente:', err);
-      error.value = 'Error al intentar iniciar sesión.';
+      console.error('❌ Error en login cliente:', err)
+      error.value = 'Error al intentar iniciar sesión.'
+      localStorage.removeItem('dni')
+      localStorage.removeItem('tipoUsuario')
     }
+
   } else {
     try {
       const response = await api.post('/api/admin/usuarios/login', {
         Usuario: usuario.value,
         Pass: contrasena.value,
-      });
+      })
 
-      const token = response.data.access_token;
-      localStorage.setItem('token', token);
-      localStorage.setItem('tipoUsuario', 'empleado');
-      router.push('/reclamos-empleados');
+      const token = response.data.access_token
+      localStorage.setItem('token', token)
+      localStorage.setItem('tipoUsuario', 'empleado')
+      router.push('/reclamos-empleados')
     } catch (err) {
-      console.error('Error en login de empleado:', err);
-      error.value = 'Credenciales inválidas o error al iniciar sesión.';
+      console.error('❌ Error en login empleado:', err)
+      error.value = 'Credenciales inválidas o error al iniciar sesión.'
+      localStorage.removeItem('token')
+      localStorage.removeItem('tipoUsuario')
     }
   }
-};
-
+}
 </script>
+
+
 
 <style scoped>
 .login-container {

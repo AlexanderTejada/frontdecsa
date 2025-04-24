@@ -7,22 +7,22 @@
       </div>
       <div>
         <h2 class="text-2xl font-semibold text-slate-900">
-          {{ usuario?.NOMBRE_COMPLETO || usuario?.NombreCompleto }}
+          {{ usuario?.nombre_completo || usuario?.NOMBRE_COMPLETO || usuario?.NombreCompleto || 'Usuario' }}
         </h2>
-        <p class="text-sm text-slate-500">DNI: {{ usuario?.DNI }}</p>
+        <p class="text-sm text-slate-500">DNI: {{ usuario?.dni || usuario?.DNI || 'N/A' }}</p>
       </div>
     </div>
 
     <!-- Card de información -->
     <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 mb-8">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-700">
-        <p><strong class="text-blue-800">Teléfono:</strong> {{ usuario?.CELULAR || usuario?.Telefono || 'No disponible' }}</p>
-        <p><strong class="text-blue-800">Email:</strong> {{ usuario?.EMAIL || 'No disponible' }}</p>
-        <p><strong class="text-blue-800">Calle:</strong> {{ usuario?.CALLE || usuario?.Calle || 'Sin calle' }}</p>
-        <p><strong class="text-blue-800">Barrio:</strong> {{ usuario?.BARRIO || usuario?.Barrio || 'Sin barrio' }}</p>
-        <p><strong class="text-blue-800">Código Postal:</strong> {{ usuario?.CODIGO_POSTAL || usuario?.CodigoPostal || 'N/A' }}</p>
-        <p><strong class="text-blue-800">Suministro:</strong> {{ usuario?.CODIGO_SUMINISTRO || usuario?.CodigoSuministro || 'N/A' }}</p>
-        <p><strong class="text-blue-800">Medidor:</strong> {{ usuario?.NUMERO_MEDIDOR || usuario?.NumeroMedidor || 'N/A' }}</p>
+        <p><strong class="text-blue-800">Teléfono:</strong> {{ usuario?.celular || usuario?.CELULAR || usuario?.Telefono || 'No disponible' }}</p>
+        <p><strong class="text-blue-800">Email:</strong> {{ usuario?.email || usuario?.EMAIL || 'No disponible' }}</p>
+        <p><strong class="text-blue-800">Calle:</strong> {{ usuario?.calle || usuario?.CALLE || 'Sin calle' }}</p>
+        <p><strong class="text-blue-800">Barrio:</strong> {{ usuario?.barrio || usuario?.BARRIO || 'Sin barrio' }}</p>
+        <p><strong class="text-blue-800">Código Postal:</strong> {{ usuario?.codigo_postal || usuario?.CODIGO_POSTAL || 'N/A' }}</p>
+        <p><strong class="text-blue-800">Suministro:</strong> {{ usuario?.codigo_suministro || usuario?.CODIGO_SUMINISTRO || 'N/A' }}</p>
+        <p><strong class="text-blue-800">Medidor:</strong> {{ usuario?.numero_medidor || usuario?.NUMERO_MEDIDOR || 'N/A' }}</p>
       </div>
 
       <div class="mt-6 text-right">
@@ -96,8 +96,7 @@ const obtenerDatosUsuario = async () => {
 };
 
 const avatarIniciales = computed(() => {
-  if (!usuario.value) return '';
-  const nombreCompleto = usuario.value.NOMBRE_COMPLETO || usuario.value.NombreCompleto;
+  const nombreCompleto = usuario.value?.nombre_completo || usuario.value?.NOMBRE_COMPLETO || usuario.value?.NombreCompleto || '';
   return nombreCompleto
     .split(' ')
     .map(word => word[0])
@@ -122,10 +121,10 @@ const campos = [
 ];
 
 const abrirModal = () => {
-  form.EMAIL = usuario.value?.EMAIL || '';
-  form.CELULAR = usuario.value?.CELULAR || '';
-  form.CALLE = usuario.value?.CALLE || '';
-  form.BARRIO = usuario.value?.BARRIO || '';
+  form.EMAIL = usuario.value?.email || usuario.value?.EMAIL || '';
+  form.CELULAR = usuario.value?.celular || usuario.value?.CELULAR || '';
+  form.CALLE = usuario.value?.calle || usuario.value?.CALLE || '';
+  form.BARRIO = usuario.value?.barrio || usuario.value?.BARRIO || '';
   mostrarModal.value = true;
 };
 

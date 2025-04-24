@@ -76,83 +76,86 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { obtenerTodosLosReclamosPorDni as obtenerReclamosDesdeServicio } from '@/services/reclamosService';
-import ReclamoCard from '@/components/cliente/ReclamoCard.vue';
-import CrearReclamoModal from '@/components/cliente/CrearReclamoModal.vue';
-import ReclamoDetalleModal from '@/components/cliente/ReclamoDetalleModal.vue';
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { obtenerTodosLosReclamosPorDni as obtenerReclamosDesdeServicio } from '@/services/reclamosService'
+import ReclamoCard from '@/components/cliente/ReclamoCard.vue'
+import CrearReclamoModal from '@/components/cliente/CrearReclamoModal.vue'
+import ReclamoDetalleModal from '@/components/cliente/ReclamoDetalleModal.vue'
 
-const router = useRouter();
-const reclamos = ref([]);
-const mostrarModalCrear = ref(false);
-const reclamoSeleccionado = ref(null);
-const dniUsuario = localStorage.getItem('dni');
+const router = useRouter()
+const reclamos = ref([])
+const mostrarModalCrear = ref(false)
+const reclamoSeleccionado = ref(null)
+const dniUsuario = localStorage.getItem('dni')
 
 const meses = [
   'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-];
+]
 
-const fechaActual = new Date();
-const mesActual = ref(fechaActual.getMonth());
-const anioActual = ref(fechaActual.getFullYear());
+const fechaActual = new Date()
+const mesActual = ref(fechaActual.getMonth())
+const anioActual = ref(fechaActual.getFullYear())
 
 const cambiarMes = (delta) => {
-  const nuevaFecha = new Date(anioActual.value, mesActual.value + delta);
-  mesActual.value = nuevaFecha.getMonth();
-  anioActual.value = nuevaFecha.getFullYear();
-};
+  const nuevaFecha = new Date(anioActual.value, mesActual.value + delta)
+  mesActual.value = nuevaFecha.getMonth()
+  anioActual.value = nuevaFecha.getFullYear()
+}
 
 const abrirModalCrear = () => {
-  mostrarModalCrear.value = true;
-};
+  mostrarModalCrear.value = true
+}
 
 const abrirDetalle = (reclamo) => {
-  reclamoSeleccionado.value = reclamo;
-};
+  reclamoSeleccionado.value = reclamo
+}
 
 const cargarReclamos = async () => {
   if (!dniUsuario) {
-    router.push('/login');
-    return;
+    router.push('/login')
+    return
   }
 
   try {
-    const response = await obtenerReclamosDesdeServicio(dniUsuario);
-    const reclamosData = Array.isArray(response.reclamos) ? response.reclamos : [];
+    const response = await obtenerReclamosDesdeServicio(dniUsuario)
+    const reclamosData = Array.isArray(response.reclamos) ? response.reclamos : response
+
     reclamos.value = reclamosData
-      .sort((a, b) => new Date(b.FECHA_RECLAMO) - new Date(a.FECHA_RECLAMO))
-      .map(reclamo => {
-        const fechaObj = new Date(reclamo.FECHA_RECLAMO);
+      .filter(r => r) // evita reclamos nulos o malformados
+      .map(r => {
+        const fechaObj = new Date(r.fecha || r.FECHA_RECLAMO || r.fecha_reclamo)
         return {
-          ID_RECLAMO: reclamo.ID_RECLAMO,
+          ID_RECLAMO: r.ID_RECLAMO || r.id_reclamo,
           fecha: fechaObj.toLocaleDateString('es-ES', {
             day: '2-digit', month: '2-digit', year: 'numeric'
           }),
-          mes: fechaObj.getMonth(),
-          anio: fechaObj.getFullYear(),
           hora: fechaObj.toLocaleTimeString('es-ES', {
             hour: '2-digit', minute: '2-digit'
           }),
-          estado: reclamo.ESTADO,
-          calle: reclamo.calle,
-          barrio: reclamo.barrio,
-          codigo_postal: reclamo.codigo_postal,
-          medidor: reclamo.medidor,
-          numeroSuministro: reclamo.numeroSuministro,
-          descripcion: reclamo.DESCRIPCION,
-        };
-      });
+          mes: fechaObj.getMonth(),
+          anio: fechaObj.getFullYear(),
+          estado: r.ESTADO || r.estado,
+          calle: r.calle || '---',
+          barrio: r.barrio || '---',
+          codigo_postal: r.codigo_postal || '',
+          medidor: r.medidor || '',
+          numeroSuministro: r.numeroSuministro || '',
+          descripcion: r.DESCRIPCION || r.descripcion || 'Sin descripción'
+        }
+      })
+      .sort((a, b) => new Date(b.anio, b.mes) - new Date(a.anio, a.mes))
+
   } catch (error) {
-    console.error('Error al obtener reclamos:', error);
-    reclamos.value = [];
+    console.error('❌ Error al obtener reclamos:', error)
+    reclamos.value = []
   }
-};
+}
 
 const reclamosFiltrados = computed(() => {
-  return reclamos.value.filter(r => r.mes === mesActual.value && r.anio === anioActual.value);
-});
+  return reclamos.value.filter(r => r.mes === mesActual.value && r.anio === anioActual.value)
+})
 
-onMounted(cargarReclamos);
+onMounted(cargarReclamos)
 </script>

@@ -2,16 +2,23 @@
   <div>
     <!-- Sistema completo (Login incluido) -->
     <div class="flex min-h-screen overflow-x-hidden energy-bg">
-      <!-- Sidebar -->
+      <!-- Sidebar (solo si no es login) -->
       <Sidebar v-if="!esLogin" />
 
+      <!-- Contenedor principal con margen solo si no es login -->
       <div
-        class="flex flex-col flex-grow transition-all duration-300
-                ml-0 md:ml-[200px] lg:ml-[240px] xl:ml-[280px]
-                w-full md:w-[calc(100%-200px)] lg:w-[calc(100%-240px)] xl:w-[calc(100%-280px)]"
+        :class="[
+          'flex flex-col flex-grow transition-all duration-300',
+          !esLogin
+            ? 'ml-0 md:ml-[200px] lg:ml-[240px] xl:ml-[280px] w-full md:w-[calc(100%-200px)] lg:w-[calc(100%-240px)] xl:w-[calc(100%-280px)]'
+            : 'w-full ml-0'
+        ]"
       >
         <!-- HEADER -->
-        <header v-if="!esLogin" class="energy-header px-4 py-2 sm:px-6 sm:py-3 border-b border-slate-200 flex items-center sticky top-0 z-20">
+        <header
+          v-if="!esLogin"
+          class="energy-header px-4 py-2 sm:px-6 sm:py-3 border-b border-slate-200 flex items-center sticky top-0 z-20"
+        >
           <div class="flex items-center space-x-2 md:space-x-0">
             <button
               @click="mostrarSidebarMobile = true"
@@ -45,7 +52,7 @@
           </div>
         </header>
 
-        <!-- VISTAS DINÁMICAS -->
+        <!-- Vistas dinámicas -->
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <component :is="Component" :key="$route.fullPath" />
@@ -53,75 +60,109 @@
         </router-view>
       </div>
 
-      <!-- NAV MOBILE -->
+      <!-- Navegación móvil -->
       <MobileNav v-if="mostrarSidebarMobile" @cerrar="cerrarSidebar" />
     </div>
 
-    <!-- SPINNER Y CHAT -->
+    <!-- Spinner y Chat solo para clientes -->
     <Spinner v-if="loading" />
     <ChatCliente v-if="tipoUsuario === 'cliente' && !esLogin" />
+
+    <!-- Notificador solo para empleados -->
+    <Notificador v-if="tipoUsuario === 'empleado'" />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref, computed, onMounted, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
-import Sidebar from '@/components/Sidebar.vue';
-import MobileNav from '@/components/MobileNav.vue';
-import Spinner from '@/components/comunes/Spinner.vue';
-import ChatCliente from '@/components/cliente/ChatCliente.vue';
-import { obtenerUsuario } from '@/services/usuariosService';
+import Sidebar from '@/components/Sidebar.vue'
+import MobileNav from '@/components/MobileNav.vue'
+import Spinner from '@/components/comunes/Spinner.vue'
+import ChatCliente from '@/components/cliente/ChatCliente.vue'
+import Notificador from '@/components/comunes/Notificador.vue'
+import { obtenerUsuario } from '@/services/usuariosService'
 
-const route = useRoute();
-const router = useRouter();
+const route = useRoute()
+const router = useRouter()
 
-const loading = ref(false);
-const nombreUsuario = ref('');
-const mostrarSidebarMobile = ref(false);
+const loading = ref(false)
+const nombreUsuario = ref('')
+const mostrarSidebarMobile = ref(false)
 
-const esLogin = computed(() => route.path === '/login');
-const tipoUsuario = computed(() => localStorage.getItem('tipoUsuario') || 'cliente');
+const esLogin = computed(() => route.path === '/login')
+const tipoUsuario = ref('cliente')
 
 const cerrarSidebar = () => {
-  mostrarSidebarMobile.value = false;
-};
+  mostrarSidebarMobile.value = false
+}
+
+const cargarTipoUsuario = () => {
+  tipoUsuario.value = localStorage.getItem('tipoUsuario') || 'cliente'
+}
 
 const cargarNombreUsuario = async () => {
+  cargarTipoUsuario()
+
   if (tipoUsuario.value === 'cliente') {
-    const dni = localStorage.getItem('dni');
-    if (!dni && !esLogin.value) {
-      router.push('/login');
-      return;
+    const dni = localStorage.getItem('dni')
+
+    // 🚨 Verificación estricta
+    if (!dni || dni === 'null' || dni.trim() === '') {
+      nombreUsuario.value = 'Invitado'
+      if (!esLogin.value) {
+        router.push('/login')
+      }
+      return
     }
+
     try {
-      const usuario = await obtenerUsuario(dni);
-      nombreUsuario.value = usuario.NOMBRE_COMPLETO || usuario.NombreCompleto || 'Usuario Desconocido';
-    } catch {
-      nombreUsuario.value = 'Usuario Desconocido';
+      const usuario = await obtenerUsuario(dni)
+      nombreUsuario.value = usuario.nombre_completo || usuario.NOMBRE_COMPLETO || usuario.NombreCompleto || 'Usuario'
+    } catch (err) {
+      console.error('❌ Error al obtener usuario:', err)
+      nombreUsuario.value = 'Usuario Desconocido'
+      localStorage.removeItem('dni')
+      if (!esLogin.value) router.push('/login')
     }
   } else {
-    nombreUsuario.value = localStorage.getItem('usuario') || 'Admin';
+    nombreUsuario.value = localStorage.getItem('usuario') || 'Admin'
   }
-};
+}
 
-onMounted(cargarNombreUsuario);
+onMounted(cargarNombreUsuario)
+
 watch(route, () => {
-  if (!esLogin.value) cargarNombreUsuario();
-});
+  cargarNombreUsuario()
+})
 
-// Excluir rutas del spinner
-const rutasSinSpinner = ['/empleados'];
+const rutasSinSpinner = ['/empleados']
 
 router.beforeEach((to, from, next) => {
-  loading.value = !rutasSinSpinner.includes(to.path);
-  next();
-});
+  loading.value = !rutasSinSpinner.includes(to.path)
+  next()
+})
 
 router.afterEach(() => {
-  setTimeout(() => (loading.value = false), 800);
-});
+  setTimeout(() => (loading.value = false), 800)
+})
+
+// ✅ Mostrar notificación solo si es un empleado
+onMounted(() => {
+  if (tipoUsuario.value === 'empleado') {
+    const intentarNotificar = () => {
+      if (window.__notificadorGlobal) {
+        window.__notificadorGlobal(' Bien venido de nuevo')
+      } else {
+        setTimeout(intentarNotificar, 100)
+      }
+    }
+    intentarNotificar()
+  }
+})
 </script>
+
 
 <style scoped>
 .energy-bg {

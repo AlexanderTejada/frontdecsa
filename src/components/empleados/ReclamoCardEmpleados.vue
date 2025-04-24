@@ -1,130 +1,151 @@
 <template>
   <div
     @click="emitirDetalles"
-    class="w-full bg-white/80 border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer backdrop-blur-sm
-           max-w-sm xl:max-w-xs 2xl:max-w-sm relative"
+    :class="[
+      'relative bg-white rounded-lg shadow p-4 border-t-4 transition cursor-pointer hover:shadow-md',
+      baseBordeColor,
+      hoverBordeColor,
+      esNuevo ? 'animacion-borde' : ''
+    ]"
   >
-    <!-- Borde superior según prioridad -->
-    <div :class="prioridadBarClass" class="absolute top-0 left-0 w-full h-1 rounded-t-xl"></div>
+    <!-- ID del reclamo en la esquina superior izquierda -->
+    <span class="absolute top-2 left-3 text-xs font-bold text-indigo-500">
+      #{{ id_reclamo }}
+    </span>
 
-    <!-- Contenido principal -->
-    <div class="p-4">
-      <!-- Encabezado -->
-      <div class="border-b pb-2 mb-2 flex justify-between items-start">
-        <div class="flex flex-col">
-          <h3 class="text-blue-800 font-semibold text-sm xl:text-xs">R. #{{ ID_RECLAMO }}</h3>
-          <p class="text-gray-500 text-xs xl:text-[0.65rem]">{{ fecha }} {{ hora }}</p>
-          <p class="text-gray-600 text-[0.65rem] xl:text-[0.6rem] mt-0.2 leading-tight">
-            {{ cliente.nombre }}<br>
-            <span class="text-gray-400">(DNI: {{ cliente.dni }})</span>
-          </p>
-        </div>
+    <!-- PRIORIDAD COMO TEXTO COLOREADO -->
+    <div class="mb-2 text-center text-xs font-bold tracking-widest uppercase"
+         :class="prioridadTituloClass">
+      Prioridad: {{ prioridad || 'Media' }}
+    </div>
 
-        <span
-          :class="estadoClass"
-          class="text-xs xl:text-[0.65rem] font-medium px-2 py-0.5 rounded-md flex items-center gap-1 border"
-        >
-          ● {{ estado }}
-        </span>
-      </div>
+    <!-- CABECERA DEL CLIENTE -->
+    <div class="mb-2">
+      <h3 class="text-base font-semibold text-center" :class="nombreClienteClass">
+        {{ cliente?.nombre || 'Desconocido' }}
+      </h3>
+      <p class="text-xs text-slate-600 text-center">DNI: {{ cliente?.dni || 'Sin DNI' }}</p>
+    </div>
 
-      <!-- Cuerpo de la tarjeta -->
-      <div class="grid grid-cols-2 gap-2 xl:gap-1.5 text-sm xl:text-xs text-gray-700">
-        <p><strong class="text-blue-800">Dirección:</strong> {{ truncatedDireccion }}</p>
-        <p><strong class="text-blue-800">Suministro:</strong> {{ numeroSuministro }}</p>
-        <p><strong class="text-blue-800">Medidor:</strong> {{ medidor }}</p>
-        <p class="col-span-1 break-words overflow-hidden leading-snug text-sm xl:text-xs">
-          <strong class="text-blue-800">Descripción:</strong> {{ truncatedDescripcion }}
+    <!-- DESCRIPCIÓN Y UBICACIÓN -->
+    <div class="mb-2 text-sm text-slate-600">
+      <p class="text-xs truncate">
+        <span class="font-medium text-slate-700">Descripción:</span>
+        {{ descripcion || 'Sin descripción' }}
+      </p>
+      <p class="text-xs mt-1 truncate">
+        <span class="font-medium text-slate-700">Dirección:</span>
+        {{ calle || 'Sin calle' }} — {{ barrio || 'Sin barrio' }}
+      </p>
+    </div>
+
+    <!-- FECHAS Y ESTADO -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-2 text-xs text-slate-600">
+      <div>
+        <p><span class="font-medium text-slate-700">Fecha:</span> {{ fecha || 'Sin fecha' }} {{ hora || '' }}</p>
+        <p v-if="fechaCierre">
+          <span class="font-medium text-slate-700">Cierre:</span> {{ fechaCierre }} {{ horaCierre }}
         </p>
+      </div>
+      <div>
+        <span class="px-2 py-0.5 rounded-full font-medium"
+              :class="{
+                'bg-orange-100 text-orange-700': estado === 'Pendiente',
+                'bg-blue-100 text-blue-700': estado === 'En proceso',
+                'bg-green-100 text-green-700': estado === 'Resuelto',
+                'bg-slate-300 text-slate-800': !['Pendiente','En proceso','Resuelto'].includes(estado)
+              }">
+          Estado: {{ estado || 'Pendiente' }}
+        </span>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
-import { computed } from 'vue';
 
-const {
-  ID_RECLAMO,
-  fecha,
-  hora,
-  estado,
-  cliente,
-  numeroSuministro,
-  medidor,
-  descripcion,
-  calle,
-  barrio,
-  codigo_postal,
-  prioridad,
-} = defineProps({
-  ID_RECLAMO: Number,
-  fecha: String,
-  hora: String,
-  estado: String,
+<script setup>
+import { computed } from 'vue'
+
+const emit = defineEmits(['verDetalles'])
+
+const props = defineProps({
+  id_reclamo: [String, Number],
   cliente: Object,
+  prioridad: String,
+  estado: String,
   numeroSuministro: String,
   medidor: String,
   descripcion: String,
   calle: String,
   barrio: String,
   codigo_postal: String,
-  prioridad: String,
-});
-
-const emit = defineEmits(['verDetalles']);
-
-const truncatedDescripcion = computed(() => {
-  const limite = window.innerWidth <= 620 ? 30 : 50;
-  return descripcion.length > limite ? `${descripcion.substring(0, limite)}...` : descripcion;
-});
-
-const truncatedDireccion = computed(() => {
-  const limite = window.innerWidth <= 620 ? 20 : 40;
-  const direccion = `${calle}, ${barrio} (CP ${codigo_postal})`;
-  return direccion.length > limite ? `${direccion.substring(0, limite)}...` : direccion;
-});
-
-const estadoClass = computed(() => {
-  switch (estado) {
-    case 'Resuelto':
-      return 'bg-green-100 text-green-700 border-green-300';
-    case 'Pendiente':
-      return 'bg-yellow-100 text-yellow-700 border-yellow-300';
-    case 'En proceso':
-      return 'bg-blue-100 text-blue-700 border-blue-300';
-    default:
-      return 'bg-gray-100 text-gray-700 border-gray-300';
-  }
-});
-
-const prioridadBarClass = computed(() => {
-  switch (prioridad) {
-    case 'Alta':
-      return 'bg-red-500';
-    case 'Media':
-      return 'bg-yellow-400';
-    case 'Baja':
-      return 'bg-green-500';
-    default:
-      return 'bg-gray-300';
-  }
-});
+  fecha: String,
+  hora: String,
+  fechaCierre: String,
+  horaCierre: String
+})
 
 const emitirDetalles = () => {
-  emit('verDetalles', {
-    ID_RECLAMO,
-    fecha,
-    hora,
-    estado,
-    prioridad,
-    cliente,
-    numeroSuministro,
-    medidor,
-    descripcion,
-    calle,
-    barrio,
-    codigo_postal,
-  });
-};
+  emit('verDetalles', { ...props })
+}
+
+const baseBordeColor = computed(() => {
+  if (props.estado === 'Resuelto') return 'border-t-green-400'
+  switch (props.prioridad) {
+    case 'Alta': return 'border-t-red-400'
+    case 'Media': return 'border-t-yellow-400'
+    case 'Baja': return 'border-t-indigo-300'
+    default: return 'border-t-slate-300'
+  }
+})
+
+const hoverBordeColor = computed(() => {
+  if (props.estado === 'Resuelto') return 'hover:border-t-green-500'
+  switch (props.prioridad) {
+    case 'Alta': return 'hover:border-t-red-600'
+    case 'Media': return 'hover:border-t-yellow-500'
+    case 'Baja': return 'hover:border-t-indigo-500'
+    default: return 'hover:border-t-slate-400'
+  }
+})
+
+const prioridadTituloClass = computed(() => {
+  if (props.estado === 'Resuelto') return 'text-green-700'
+  switch (props.prioridad) {
+    case 'Alta': return 'text-red-600'
+    case 'Media': return 'text-yellow-600'
+    case 'Baja': return 'text-indigo-500'
+    default: return 'text-slate-500'
+  }
+})
+
+const nombreClienteClass = computed(() => {
+  if (props.estado === 'Resuelto') return 'text-green-700'
+  switch (props.prioridad) {
+    case 'Alta': return 'text-red-600'
+    case 'Media': return 'text-yellow-600'
+    case 'Baja': return 'text-indigo-500'
+    default: return 'text-slate-700'
+  }
+})
 </script>
+
+
+<style scoped>
+@keyframes pulse-border {
+  0% {
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(56, 189, 248, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0);
+  }
+}
+
+.animacion-borde {
+  animation: pulse-border 2s ease-out infinite;
+  border-color: #3b82f6 !important; /* Azul vibrante */
+}
+</style>

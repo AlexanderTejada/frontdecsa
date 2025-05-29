@@ -42,7 +42,7 @@
     <!-- FECHAS Y ESTADO -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-2 text-xs text-slate-600">
       <div>
-        <p><span class="font-medium text-slate-700">Fecha:</span> {{ fecha || 'Sin fecha' }} {{ hora || '' }}</p>
+        <p><span class="font-medium text-slate-600">Fecha:</span> {{ fecha || 'Sin fecha' }} {{ hora || '' }}</p>
         <p v-if="fechaCierre">
           <span class="font-medium text-slate-700">Cierre:</span> {{ fechaCierre }} {{ horaCierre }}
         </p>
@@ -50,7 +50,7 @@
       <div>
         <span class="px-2 py-0.5 rounded-full font-medium"
               :class="{
-                'bg-orange-100 text-orange-700': estado === 'Pendiente',
+                'bg-orange-100 text-orange-500': estado === 'Pendiente',
                 'bg-blue-100 text-blue-700': estado === 'En proceso',
                 'bg-green-100 text-green-700': estado === 'Resuelto',
                 'bg-slate-300 text-slate-800': !['Pendiente','En proceso','Resuelto'].includes(estado)
